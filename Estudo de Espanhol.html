@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Parque das Palavras — Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8EC;
+    --plum:#2D2A4A;
+    --coral:#FF6B57;
+    --sun:#FFC93C;
+    --sky:#3FA7E1;
+    --grass:#3FB58A;
+    --grape:#8E6FD1;
+    --pink:#FF7FAE;
+    --card:#FFFFFF;
+    --line:#EFE6D3;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    font-family:'Nunito',sans-serif;
+    color:var(--plum);
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .wrap{
+    max-width:760px;margin:0 auto;
+    padding:calc(14px + env(safe-area-inset-top)) 14px calc(90px + env(safe-area-inset-bottom));
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 4px 6px;
+  }
+  .title{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .stars{
+    background:var(--sun);
+    border-radius:999px;
+    padding:6px 14px;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    display:flex;align-items:center;gap:6px;
+    box-shadow:0 3px 0 #E0A821;
+  }
+  #starcount{min-width:14px;display:inline-block;text-align:right;}
+
+  /* ---------- TRACK (rollercoaster progress) ---------- */
+  .track{
+    position:relative;
+    height:64px;
+    margin:6px 0 14px;
+    overflow:hidden;
+  }
+  .track svg{position:absolute;top:0;left:0;width:100%;height:100%;}
+  .stops{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    padding:0 6px;
+  }
+  .stop{
+    width:34px;height:34px;border-radius:50%;
+    background:#fff;border:3px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+    transition:.2s;
+  }
+  .stop.done{background:var(--grass);border-color:var(--grass);color:#fff;}
+  .stop.current{border-color:var(--coral);transform:scale(1.18);}
+
+  /* ---------- NAV DOTS TEXT ---------- */
+  .stationbar{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;
+  }
+  .stbtn{
+    border:none;border-radius:16px;padding:8px 4px;
+    font-family:'Baloo 2';font-weight:700;font-size:11px;
+    color:#fff;cursor:pointer;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    opacity:.55;
+  }
+  .stbtn .em{font-size:20px;}
+  .stbtn.active{opacity:1;box-shadow:0 4px 0 rgba(0,0,0,.15);transform:translateY(-2px);}
+
+  /* ---------- CARD PANEL ---------- */
+  .panel{
+    background:var(--card);
+    border-radius:26px;
+    padding:20px 18px 24px;
+    box-shadow:0 6px 0 var(--line);
+    min-height:340px;
+  }
+  .panel h2{
+    font-family:'Baloo 2';font-size:21px;margin:0 0 4px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .panel p.sub{margin:0 0 14px;font-size:14px;color:#6d6690;font-weight:700;}
+
+  .modebar{display:flex;gap:8px;margin-bottom:16px;}
+  .modebtn{
+    flex:1;border:none;border-radius:14px;padding:10px 6px;
+    font-family:'Baloo 2';font-weight:700;font-size:14px;
+    background:#F1ECDD;color:var(--plum);cursor:pointer;
+  }
+  .modebtn.on{background:var(--plum);color:#fff;}
+
+  /* ---------- FLASHCARDS ---------- */
+  .cardgrid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  }
+  .flip{
+    perspective:800px;height:92px;cursor:pointer;
+  }
+  .flip-inner{
+    position:relative;width:100%;height:100%;
+    transition:transform .45s;transform-style:preserve-3d;
+  }
+  .flip.on .flip-inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:6px;
+    font-weight:800;font-size:15px;line-height:1.15;
+    backface-visibility:hidden;
+  }
+  .face.front{background:var(--sky);color:#fff;}
+  .face.back{background:var(--pink);color:#fff;transform:rotateY(180deg);font-size:13px;}
+
+  /* ---------- QUIZ ---------- */
+  .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .qcount{font-weight:900;color:#a79cd6;font-size:13px;}
+  .qtext{
+    font-family:'Baloo 2';font-size:18px;font-weight:700;
+    background:#F6F2E4;border-radius:16px;padding:14px;margin-bottom:14px;
+    text-align:center;
+  }
+  .opt{
+    display:block;width:100%;text-align:left;
+    border:none;border-radius:14px;padding:13px 16px;margin-bottom:9px;
+    font-family:'Nunito';font-weight:800;font-size:15px;
+    background:#EFEAF7;color:var(--plum);cursor:pointer;
+    transition:.15s;
+  }
+  .opt:active{transform:scale(.98);}
+  .opt.correct{background:var(--grass);color:#fff;}
+  .opt.wrong{background:var(--coral);color:#fff;}
+  .feedback{
+    text-align:center;font-family:'Baloo 2';font-weight:700;font-size:16px;
+    min-height:26px;margin-top:6px;
+  }
+  .nextbtn{
+    display:block;margin:14px auto 0;border:none;border-radius:999px;
+    padding:11px 26px;font-family:'Baloo 2';font-weight:700;font-size:15px;
+    background:var(--plum);color:#fff;cursor:pointer;
+  }
+  .donebox{
+    text-align:center;padding:20px 6px;
+  }
+  .donebox .big{font-size:48px;}
+  .donebox h3{font-family:'Baloo 2';margin:6px 0;}
+  .retrybtn{
+    border:none;border-radius:999px;padding:10px 22px;
+    background:var(--sun);font-family:'Baloo 2';font-weight:700;
+    color:var(--plum);cursor:pointer;margin-top:8px;box-shadow:0 3px 0 #E0A821;
+  }
+
+  .rule{
+    background:#F6F2E4;border-radius:16px;padding:14px;margin-bottom:14px;
+    font-size:14px;font-weight:700;line-height:1.5;
+  }
+  .rule b.g1{color:var(--sky);}
+  .rule b.g2{color:var(--coral);}
+
+  .burst{
+    position:fixed;inset:0;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:70px;z-index:99;opacity:0;
+  }
+  .burst.show{animation:pop .7s ease-out;}
+  @keyframes pop{
+    0%{opacity:0;transform:scale(.3) rotate(-10deg);}
+    30%{opacity:1;transform:scale(1.15) rotate(6deg);}
+    100%{opacity:0;transform:scale(1.4) rotate(0);}
+  }
+  footer{
+    text-align:center;font-size:12px;color:#B3A98A;padding:10px 0;font-weight:700;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title">🎡 <span>Parque das Palavras</span></div>
+    <div class="stars">⭐ <span id="starcount">0</span></div>
+  </header>
+
+  <div class="track">
+    <svg viewBox="0 0 400 60" preserveAspectRatio="none">
+      <path d="M0,45 Q50,5 100,45 T200,45 T300,45 T400,45" fill="none" stroke="#E7DCC0" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>
+    </svg>
+    <div class="stops" id="stops"></div>
+  </div>
+
+  <div class="stationbar" id="stationbar"></div>
+
+  <div class="panel" id="panel"></div>
+
+  <footer>Toca uma estação, estuda as fichas 📖 e depois joga o desafio 🎯 — ganha estrelas a cada acerto!</footer>
+</div>
+
+<div class="burst" id="burst"></div>
+
+<script>
+const DATA = [
+  { id:0, emoji:'🔢', short:'Números', color:'#3FA7E1',
+    title:'🔢 Números com letras',
+    sub:'Toca na ficha para ver a resposta. Depois joga!',
+    cards:[
+      {f:'9', b:'nueve'}, {f:'40', b:'cuarenta'}, {f:'14', b:'catorce'},
+      {f:'28', b:'veintiocho'}, {f:'26', b:'veintiséis'}, {f:'50', b:'cincuenta'},
+      {f:'6', b:'seis'}, {f:'35', b:'treinta y cinco'}
+    ],
+    quiz:[
+      {q:'¿Cómo se escribe 28?', opts:['veintiséis','veintiocho','dieciocho','treinta y ocho'], a:1},
+      {q:'¿Cómo se escribe 14?', opts:['cuarenta','catorce','cuatro','cuarenta y cuatro'], a:1},
+      {q:'¿Cómo se escribe 50?', opts:['quince','cincuenta','cinco','cincuenta y cinco'], a:1},
+      {q:'¿Cómo se escribe 35?', opts:['treinta y cinco','cincuenta y tres','trece','treinta'], a:0},
+      {q:'¿Cómo se escribe 6?', opts:['seis','dieciséis','sesenta','seis y seis'], a:0},
+      {q:'¿Cómo se escribe 26?', opts:['veintiséis','dieciséis','sesenta y dos','veintiuno'], a:0},
+      {q:'¿Cómo se escribe 9?', opts:['diez','nueve','noventa','ocho'], a:1},
+      {q:'¿Cómo se escribe 40?', opts:['cuarenta','catorce','cuatro','cuarenta y uno'], a:0}
+    ]
+  },
+  { id:1, emoji:'❓', short:'Preguntas', color:'#FF7FAE',
+    title:'❓ Preguntas mágicas',
+    sub:'¿Qué pregunta se usa para saber cada cosa?',
+    cards:[
+      {f:'el nombre', b:'¿Cómo te llamas?'},
+      {f:'la edad', b:'¿Cuántos años tienes?'},
+      {f:'el precio', b:'¿Cuánto cuesta?'},
+      {f:'la hora', b:'¿Qué hora es?'}
+    ],
+    quiz:[
+      {q:'Para saber el NOMBRE de alguien preguntamos:', opts:['¿Qué hora es?','¿Cómo te llamas?','¿Cuánto cuesta?','¿Cuántos años tienes?'], a:1},
+      {q:'Para saber la EDAD preguntamos:', opts:['¿Cuántos años tienes?','¿Cómo te llamas?','¿Cuánto cuesta?','¿Qué hora es?'], a:0},
+      {q:'Para saber el PRECIO preguntamos:', opts:['¿Cómo te llamas?','¿Qué hora es?','¿Cuánto cuesta?','¿Cuántos años tienes?'], a:2},
+      {q:'Para saber la HORA preguntamos:', opts:['¿Cuánto cuesta?','¿Cómo te llamas?','¿Cuántos años tienes?','¿Qué hora es?'], a:3}
+    ]
+  },
+  { id:2, emoji:'🎢', short:'Parque', color:'#3FB58A',
+    title:'🎢 Atracciones del parque',
+    sub:'Emoji ➜ nombre da atração!',
+    cards:[
+      {f:'🎢', b:'la montaña rusa'}, {f:'🎡', b:'la noria'}, {f:'🏴‍☠️', b:'el barco pirata'},
+      {f:'🗼💨', b:'la caída libre'}, {f:'🚗💥', b:'los coches de choque'}, {f:'🚡', b:'el teleférico'},
+      {f:'🎠', b:'el tiovivo'}, {f:'🚣', b:'el rafting'}
+    ],
+    quiz:[
+      {q:'🎢 ¿Cómo se llama?', opts:['la noria','la montaña rusa','el tiovivo','el rafting'], a:1},
+      {q:'🎡 ¿Cómo se llama?', opts:['la noria','el barco pirata','el teleférico','la caída libre'], a:0},
+      {q:'🏴‍☠️ ¿Cómo se llama?', opts:['el tiovivo','el barco pirata','los coches de choque','la noria'], a:1},
+      {q:'🚗💥 ¿Cómo se llama?', opts:['los coches de choque','el rafting','la montaña rusa','la caída libre'], a:0},
+      {q:'🚡 ¿Cómo se llama?', opts:['el teleférico','el barco pirata','el tiovivo','la noria'], a:0},
+      {q:'🎠 ¿Cómo se llama?', opts:['el rafting','la caída libre','el tiovivo','los coches de choque'], a:2},
+      {q:'🚣 ¿Cómo se llama?', opts:['el rafting','el teleférico','la noria','el barco pirata'], a:0},
+      {q:'🗼💨 ¿Cómo se llama?', opts:['la caída libre','la montaña rusa','el tiovivo','la noria'], a:0}
+    ]
+  },
+  { id:3, emoji:'🍌', short:'Gusta', color:'#FF6B57',
+    title:'🍌 GUSTA o GUSTAN',
+    sub:'Regla de oro para no confundir',
+    rule:`<b class="g1">GUSTA</b> → usa-se com <b class="g1">1 cosa</b> (singular) ou com un <b class="g1">verbo</b> (jugar, estudiar, cantar...).<br><br>
+          <b class="g2">GUSTAN</b> → usa-se solo cuando son <b class="g2">varias cosas</b> (plural).<br><br>
+          Ej: <i>Me GUSTA la banana</i> (1 fruta) · <i>Me GUSTA jugar</i> (verbo, no plural!) · <i>Me GUSTAN las manzanas</i> (muchas).`,
+    cards:[
+      {f:'la banana (1)', b:'Me GUSTA la banana'},
+      {f:'el chocolate (1)', b:'Me GUSTA el chocolate'},
+      {f:'las manzanas (muchas)', b:'Me GUSTAN las manzanas'},
+      {f:'jugar (verbo!)', b:'Me GUSTA jugar'},
+      {f:'estudiar (verbo!)', b:'Me GUSTA estudiar'},
+      {f:'los perros (muchos)', b:'Me GUSTAN los perros'}
+    ],
+    quiz:[
+      {q:'Me ___ la banana.', opts:['gusta','gustan'], a:0},
+      {q:'Me ___ las manzanas.', opts:['gusta','gustan'], a:1},
+      {q:'Me ___ jugar a la pelota.', opts:['gusta','gustan'], a:0},
+      {q:'Me ___ estudiar.', opts:['gusta','gustan'], a:0},
+      {q:'Me ___ los perros.', opts:['gusta','gustan'], a:1},
+      {q:'Me ___ el chocolate.', opts:['gusta','gustan'], a:0},
+      {q:'Me ___ cantar.', opts:['gusta','gustan'], a:0},
+      {q:'Me ___ las atracciones del parque.', opts:['gusta','gustan'], a:1}
+    ]
+  },
+  { id:4, emoji:'🙋', short:'Yo soy', color:'#8E6FD1',
+    title:'🙋 Presentación personal',
+    sub:'4 partes que siempre debes incluir',
+    rule:`Siempre incluye: <b class="g1">nombre</b> · <b class="g1">edad</b> · <b class="g1">gustos</b> · <b class="g1">dirección</b>.<br><br>
+          Ej: <i>Yo soy María, tengo 9 años y vivo en el barrio Centro. Me gusta cantar y estudiar.</i>`,
+    cards:[
+      {f:'nombre', b:'Yo soy...'},
+      {f:'edad', b:'Tengo ... años'},
+      {f:'gustos', b:'Me gusta... / Me gustan...'},
+      {f:'dirección', b:'Vivo en...'}
+    ],
+    quiz:[
+      {q:'"Yo soy María" — ¿qué información es?', opts:['nombre','edad','gustos','dirección'], a:0},
+      {q:'"Tengo 9 años" — ¿qué información es?', opts:['nombre','edad','gustos','dirección'], a:1},
+      {q:'"Vivo en Contagem" — ¿qué información es?', opts:['nombre','edad','gustos','dirección'], a:3},
+      {q:'"Me gusta cantar" — ¿qué información es?', opts:['nombre','edad','gustos','dirección'], a:2}
+    ]
+  },
+  { id:5, emoji:'👮', short:'Profesiones', color:'#3FA7E1',
+    title:'👮 Profesiones + artículo',
+    sub:'el / la / los / las — ¿cuál usamos?',
+    rule:`<b class="g1">el</b> (1 masc.) · <b class="g1">los</b> (varios masc.) · <b class="g2">la</b> (1 fem.) · <b class="g2">las</b> (varias fem.)`,
+    cards:[
+      {f:'bombero 👨‍🚒', b:'el bombero'}, {f:'cantante 🎤', b:'la cantante'},
+      {f:'bailarines 💃🕺', b:'los bailarines'}, {f:'músicos 🎸', b:'los músicos'},
+      {f:'fotógrafo 📷', b:'el fotógrafo'}, {f:'médico 🩺', b:'el médico'},
+      {f:'cartero 📬', b:'el cartero'}, {f:'maestra 📚', b:'la maestra'}
+    ],
+    quiz:[
+      {q:'___ bombero (1 persona, masc.)', opts:['el','la','los','las'], a:0},
+      {q:'___ cantante (1 persona, fem.)', opts:['el','la','los','las'], a:1},
+      {q:'___ bailarines (varios, masc.)', opts:['el','la','los','las'], a:2},
+      {q:'___ músicos (varios, masc.)', opts:['el','la','los','las'], a:2},
+      {q:'___ fotógrafo (1, masc.)', opts:['el','la','los','las'], a:0},
+      {q:'___ maestra (1, fem.)', opts:['el','la','los','las'], a:1},
+      {q:'___ profesiones (varias, fem.)', opts:['el','la','los','las'], a:3},
+      {q:'___ médico (1, masc.)', opts:['el','la','los','las'], a:0}
+    ]
+  },
+  { id:6, emoji:'💬', short:'Querer', color:'#FF7FAE',
+    title:'💬 Verbo QUERER',
+    sub:'Yo quiero... ¿y tú?',
+    cards:[
+      {f:'yo', b:'quiero'}, {f:'tú', b:'quieres'}, {f:'él/ella/usted', b:'quiere'},
+      {f:'nosotros', b:'queremos'}, {f:'vosotros', b:'queréis'}, {f:'ellos/ustedes', b:'quieren'}
+    ],
+    quiz:[
+      {q:'Yo ___ ser maestra.', opts:['quiero','quieres','queremos','quieren'], a:0},
+      {q:'¿Tú qué ___ ser?', opts:['quiero','quieres','quiere','queremos'], a:1},
+      {q:'Ella ___ ser bombera.', opts:['quiero','quieres','quiere','quieren'], a:2},
+      {q:'Nosotros ___ pasear.', opts:['quiero','queremos','quieren','quieres'], a:1},
+      {q:'Ellos ___ jugar.', opts:['quiere','queremos','quieren','quieres'], a:2}
+    ]
+  },
+  { id:7, emoji:'📰', short:'Texto', color:'#3FB58A',
+    title:'📰 Texto informativo',
+    sub:'João Carlos Martins — ¿qué aprendimos?',
+    rule:`El objetivo de un texto informativo es <b class="g1">INFORMAR</b> de forma clara y REAL sobre un tema — ¡no es un cuento inventado!`,
+    cards:[
+      {f:'¿Qué instrumento tocaba desde niño?', b:'El piano'},
+      {f:'¿Los problemas de salud lo hicieron desistir?', b:'No — él nunca desistió'},
+      {f:'¿Qué hace hoy día?', b:'Dirige una orquesta y enseña música a niños'},
+      {f:'Objetivo del texto informativo', b:'Informar de forma clara y real'}
+    ],
+    quiz:[
+      {q:'¿Qué instrumento tocaba João Carlos Martins desde niño?', opts:['La guitarra','El piano','El violín','La batería'], a:1},
+      {q:'¿Los problemas de salud lo hicieron desistir de la música?', opts:['Sí, dejó todo','No, nunca desistió','No tuvo problemas','Dejó de estudiar'], a:1},
+      {q:'Hoy día, ¿qué hace João Carlos Martins?', opts:['Juega al fútbol','Dirige una orquesta y enseña música','Ya no trabaja','Toca solo en su casa'], a:1},
+      {q:'¿Cuál es el objetivo de un texto informativo?', opts:['Inventar una historia','Informar de forma clara y real','Hacer reír','Vender un producto'], a:1}
+    ]
+  }
+];
+
+let stars = 0;
+let current = 0;
+let mode = 'study';
+let quizIdx = 0;
+let quizScore = 0;
+let answered = false;
+let completed = new Set();
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html!==undefined) e.innerHTML = html;
+  return e;
+}
+
+function renderStops(){
+  const stops = document.getElementById('stops');
+  stops.innerHTML='';
+  DATA.forEach(st=>{
+    const d = el('div','stop'+(completed.has(st.id)?' done':'')+(st.id===current?' current':''), completed.has(st.id)?'✓':st.emoji);
+    stops.appendChild(d);
+  });
+}
+
+function renderStationbar(){
+  const bar = document.getElementById('stationbar');
+  bar.innerHTML='';
+  DATA.forEach(st=>{
+    const b = el('button','stbtn'+(st.id===current?' active':''));
+    b.style.background = st.color;
+    b.innerHTML = `<span class="em">${st.emoji}</span><span>${st.short}</span>`;
+    b.onclick = ()=>{ current = st.id; mode='study'; render(); };
+    bar.appendChild(b);
+  });
+}
+
+function burst(txt){
+  const b = document.getElementById('burst');
+  b.textContent = txt;
+  b.classList.remove('show');
+  void b.offsetWidth;
+  b.classList.add('show');
+}
+
+function addStar(n){
+  stars += n;
+  document.getElementById('starcount').textContent = stars;
+}
+
+function renderPanel(){
+  const st = DATA[current];
+  const panel = document.getElementById('panel');
+  panel.innerHTML = '';
+
+  const h2 = el('h2','', `${st.title}`);
+  const sub = el('p','sub', st.sub);
+  panel.appendChild(h2);
+  panel.appendChild(sub);
+
+  const modebar = el('div','modebar');
+  const b1 = el('button','modebtn'+(mode==='study'?' on':''),'📖 Estudiar');
+  const b2 = el('button','modebtn'+(mode==='quiz'?' on':''),'🎯 Jugar');
+  b1.onclick = ()=>{ mode='study'; render(); };
+  b2.onclick = ()=>{ mode='quiz'; quizIdx=0; quizScore=0; answered=false; render(); };
+  modebar.appendChild(b1); modebar.appendChild(b2);
+  panel.appendChild(modebar);
+
+  if(st.rule){
+    panel.appendChild(el('div','rule', st.rule));
+  }
+
+  if(mode==='study'){
+    const grid = el('div','cardgrid');
+    st.cards.forEach(c=>{
+      const wrap = el('div','flip');
+      const inner = el('div','flip-inner');
+      const front = el('div','face front', c.f);
+      const back = el('div','face back', c.b);
+      inner.appendChild(front); inner.appendChild(back);
+      wrap.appendChild(inner);
+      wrap.onclick = ()=> wrap.classList.toggle('on');
+      grid.appendChild(wrap);
+    });
+    panel.appendChild(grid);
+  } else {
+    renderQuiz(panel, st);
+  }
+}
+
+function renderQuiz(panel, st){
+  if(quizIdx >= st.quiz.length){
+    const pct = Math.round((quizScore/st.quiz.length)*100);
+    const box = el('div','donebox');
+    const emoji = pct>=80?'🏆':pct>=50?'🌟':'💪';
+    box.innerHTML = `<div class="big">${emoji}</div><h3>¡Terminaste! ${quizScore}/${st.quiz.length} (${pct}%)</h3>`;
+    if(pct>=80){ completed.add(st.id); renderStops(); }
+    const retry = el('button','retrybtn','🔁 Jugar de nuevo');
+    retry.onclick = ()=>{ quizIdx=0; quizScore=0; answered=false; render(); };
+    box.appendChild(retry);
+    panel.appendChild(box);
+    if(pct>=80) burst('🏆');
+    return;
+  }
+  const item = st.quiz[quizIdx];
+  const qhead = el('div','qhead');
+  qhead.innerHTML = `<span class="qcount">Pregunta ${quizIdx+1}/${st.quiz.length}</span><span class="qcount">⭐ ${quizScore}</span>`;
+  panel.appendChild(qhead);
+  panel.appendChild(el('div','qtext', item.q));
+
+  const fb = el('div','feedback','');
+  answered = false;
+
+  item.opts.forEach((optTxt, i)=>{
+    const btn = el('button','opt', optTxt);
+    btn.onclick = ()=>{
+      if(answered) return;
+      answered = true;
+      const allBtns = panel.querySelectorAll('.opt');
+      if(i === item.a){
+        btn.classList.add('correct');
+        fb.textContent = '🎉 ¡Correcto!';
+        quizScore++;
+        addStar(1);
+        burst('⭐');
+      } else {
+        btn.classList.add('wrong');
+        allBtns[item.a].classList.add('correct');
+        fb.textContent = '¡Casi! La respuesta era: ' + item.opts[item.a];
+      }
+      const next = el('button','nextbtn', quizIdx+1<st.quiz.length ? 'Siguiente ➜' : 'Ver resultado 🏁');
+      next.onclick = ()=>{ quizIdx++; render(); };
+      panel.appendChild(next);
+    };
+    panel.appendChild(btn);
+  });
+  panel.appendChild(fb);
+}
+
+function render(){
+  renderStops();
+  renderStationbar();
+  renderPanel();
+}
+render();
+</script>
+</body>
+</html>
