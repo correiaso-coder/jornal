@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>Parque das Palavras — Español</title>
+<title>Biblioteca de Estudos — Samuel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +16,7 @@
     --grass:#3FB58A;
     --grape:#8E6FD1;
     --pink:#FF7FAE;
+    --teal:#2FBF8F;
     --card:#FFFFFF;
     --line:#EFE6D3;
   }
@@ -33,159 +34,155 @@
     max-width:760px;margin:0 auto;
     padding:calc(14px + env(safe-area-inset-top)) 14px calc(90px + env(safe-area-inset-bottom));
   }
+  .screen{display:none;}
+  .screen.active{display:block;}
 
-  /* ---------- HEADER ---------- */
+  /* ---------- HEADER (shared) ---------- */
   header{
     display:flex;align-items:center;justify-content:space-between;
-    padding:10px 4px 6px;
+    padding:10px 4px 6px;gap:8px;
   }
   .title{
-    font-family:'Baloo 2',sans-serif;
-    font-weight:800;
-    font-size:22px;
+    font-family:'Baloo 2',sans-serif;font-weight:800;font-size:22px;
     display:flex;align-items:center;gap:8px;
   }
   .stars{
-    background:var(--sun);
-    border-radius:999px;
-    padding:6px 14px;
-    font-family:'Baloo 2',sans-serif;
-    font-weight:700;
-    font-size:16px;
-    display:flex;align-items:center;gap:6px;
-    box-shadow:0 3px 0 #E0A821;
+    background:var(--sun);border-radius:999px;padding:6px 14px;
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:16px;
+    display:flex;align-items:center;gap:6px;box-shadow:0 3px 0 #E0A821;
+    white-space:nowrap;
   }
-  #starcount{min-width:14px;display:inline-block;text-align:right;}
+  .backbtn{
+    border:none;background:#F1ECDD;color:var(--plum);
+    font-family:'Baloo 2';font-weight:700;padding:9px 15px;
+    border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap;
+  }
 
-  /* ---------- TRACK (rollercoaster progress) ---------- */
-  .track{
-    position:relative;
-    height:64px;
-    margin:6px 0 14px;
-    overflow:hidden;
+  /* ---------- HOME / LIBRARY ---------- */
+  .homehead{text-align:center;padding:18px 6px 8px;}
+  .homehead h1{font-family:'Baloo 2';font-size:26px;margin:6px 0 4px;}
+  .homehead p{margin:0;font-weight:700;color:#6d6690;font-size:14px;}
+  .subjectgrid{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+  .subjectcard{
+    display:flex;align-items:center;gap:14px;padding:18px;border-radius:24px;
+    cursor:pointer;border:none;text-align:left;width:100%;color:#fff;
+    box-shadow:0 6px 0 rgba(0,0,0,.12);
   }
+  .subjectcard .emoji{font-size:42px;flex-shrink:0;}
+  .subjectcard h3{font-family:'Baloo 2';margin:0 0 4px;font-size:19px;}
+  .subjectcard p{margin:0;font-size:13px;font-weight:700;opacity:.92;}
+  .subjectcard.es{background:linear-gradient(135deg,#3FA7E1,#8E6FD1);}
+  .subjectcard.pt{background:linear-gradient(135deg,#2FBF8F,#2D2A4A);}
+  .subjectcard.sci{background:linear-gradient(135deg,#5BAF4B,#2E5E2A);}
+
+  /* ---------- TRACK (ES rollercoaster progress) ---------- */
+  .track{position:relative;height:64px;margin:6px 0 14px;overflow:hidden;}
   .track svg{position:absolute;top:0;left:0;width:100%;height:100%;}
   .stops{
     position:absolute;top:0;left:0;width:100%;height:100%;
-    display:flex;justify-content:space-between;align-items:flex-end;
-    padding:0 6px;
+    display:flex;justify-content:space-between;align-items:flex-end;padding:0 6px;
   }
   .stop{
-    width:34px;height:34px;border-radius:50%;
-    background:#fff;border:3px solid var(--line);
-    display:flex;align-items:center;justify-content:center;
-    font-size:16px;
-    transition:.2s;
+    width:34px;height:34px;border-radius:50%;background:#fff;border:3px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:16px;transition:.2s;
   }
   .stop.done{background:var(--grass);border-color:var(--grass);color:#fff;}
   .stop.current{border-color:var(--coral);transform:scale(1.18);}
 
-  /* ---------- NAV DOTS TEXT ---------- */
-  .stationbar{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;
-  }
+  .stationbar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
   .stbtn{
-    border:none;border-radius:16px;padding:8px 4px;
-    font-family:'Baloo 2';font-weight:700;font-size:11px;
-    color:#fff;cursor:pointer;text-align:center;
-    display:flex;flex-direction:column;align-items:center;gap:3px;
-    opacity:.55;
+    border:none;border-radius:16px;padding:8px 4px;font-family:'Baloo 2';font-weight:700;
+    font-size:11px;color:#fff;cursor:pointer;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.55;
   }
   .stbtn .em{font-size:20px;}
   .stbtn.active{opacity:1;box-shadow:0 4px 0 rgba(0,0,0,.15);transform:translateY(-2px);}
 
-  /* ---------- CARD PANEL ---------- */
+  /* ---------- PANEL (shared card container) ---------- */
   .panel{
-    background:var(--card);
-    border-radius:26px;
-    padding:20px 18px 24px;
-    box-shadow:0 6px 0 var(--line);
-    min-height:340px;
+    background:var(--card);border-radius:26px;padding:20px 18px 24px;
+    box-shadow:0 6px 0 var(--line);min-height:340px;
   }
-  .panel h2{
-    font-family:'Baloo 2';font-size:21px;margin:0 0 4px;
-    display:flex;align-items:center;gap:8px;
-  }
+  .panel h2{font-family:'Baloo 2';font-size:21px;margin:0 0 4px;display:flex;align-items:center;gap:8px;}
   .panel p.sub{margin:0 0 14px;font-size:14px;color:#6d6690;font-weight:700;}
 
   .modebar{display:flex;gap:8px;margin-bottom:16px;}
   .modebtn{
-    flex:1;border:none;border-radius:14px;padding:10px 6px;
-    font-family:'Baloo 2';font-weight:700;font-size:14px;
-    background:#F1ECDD;color:var(--plum);cursor:pointer;
+    flex:1;border:none;border-radius:14px;padding:10px 6px;font-family:'Baloo 2';
+    font-weight:700;font-size:14px;background:#F1ECDD;color:var(--plum);cursor:pointer;
   }
   .modebtn.on{background:var(--plum);color:#fff;}
 
-  /* ---------- FLASHCARDS ---------- */
-  .cardgrid{
-    display:grid;grid-template-columns:1fr 1fr;gap:10px;
-  }
-  .flip{
-    perspective:800px;height:92px;cursor:pointer;
-  }
+  /* ---------- FLASHCARDS (shared) ---------- */
+  .cardgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+  .flip{perspective:800px;height:92px;cursor:pointer;}
   .flip-inner{
-    position:relative;width:100%;height:100%;
-    transition:transform .45s;transform-style:preserve-3d;
+    position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;
   }
   .flip.on .flip-inner{transform:rotateY(180deg);}
   .face{
-    position:absolute;inset:0;border-radius:16px;
-    display:flex;align-items:center;justify-content:center;
-    text-align:center;padding:6px;
-    font-weight:800;font-size:15px;line-height:1.15;
-    backface-visibility:hidden;
+    position:absolute;inset:0;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:6px;font-weight:800;font-size:15px;line-height:1.15;backface-visibility:hidden;
   }
   .face.front{background:var(--sky);color:#fff;}
-  .face.back{background:var(--pink);color:#fff;transform:rotateY(180deg);font-size:13px;}
+  .face.back{background:var(--pink);color:#fff;transform:rotateY(180deg);font-size:12.5px;}
+  .grouptitle{font-family:'Baloo 2';font-weight:700;font-size:15px;margin:16px 0 8px;color:var(--plum);}
 
-  /* ---------- QUIZ ---------- */
-  .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  /* ---------- QUIZ (shared) ---------- */
+  .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
   .qcount{font-weight:900;color:#a79cd6;font-size:13px;}
+  .progressbar{
+    height:10px;border-radius:999px;background:#EEE6D2;margin-bottom:14px;overflow:hidden;
+  }
+  .progressbar span{display:block;height:100%;background:var(--grass);border-radius:999px;transition:.3s;}
   .qtext{
-    font-family:'Baloo 2';font-size:18px;font-weight:700;
-    background:#F6F2E4;border-radius:16px;padding:14px;margin-bottom:14px;
-    text-align:center;
+    font-family:'Baloo 2';font-size:18px;font-weight:700;background:#F6F2E4;border-radius:16px;
+    padding:14px;margin-bottom:14px;text-align:center;
+  }
+  .toolbar{display:flex;gap:8px;margin-bottom:12px;}
+  .toolbtn{
+    flex:1;border:none;border-radius:12px;padding:9px;font-weight:800;font-family:'Baloo 2';
+    font-size:13px;background:#F1ECDD;color:var(--plum);cursor:pointer;
+  }
+  .hintbox{
+    background:#FFF3C4;border-radius:14px;padding:10px 14px;margin-bottom:12px;
+    font-weight:700;font-size:13px;color:#7a6420;
   }
   .opt{
-    display:block;width:100%;text-align:left;
-    border:none;border-radius:14px;padding:13px 16px;margin-bottom:9px;
-    font-family:'Nunito';font-weight:800;font-size:15px;
-    background:#EFEAF7;color:var(--plum);cursor:pointer;
-    transition:.15s;
+    display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:13px 16px;
+    margin-bottom:9px;font-family:'Nunito';font-weight:800;font-size:15px;
+    background:#EFEAF7;color:var(--plum);cursor:pointer;transition:.15s;
   }
   .opt:active{transform:scale(.98);}
   .opt.correct{background:var(--grass);color:#fff;}
   .opt.wrong{background:var(--coral);color:#fff;}
   .feedback{
-    text-align:center;font-family:'Baloo 2';font-weight:700;font-size:16px;
-    min-height:26px;margin-top:6px;
+    text-align:center;font-family:'Baloo 2';font-weight:700;font-size:15px;min-height:40px;margin-top:6px;
   }
   .nextbtn{
-    display:block;margin:14px auto 0;border:none;border-radius:999px;
-    padding:11px 26px;font-family:'Baloo 2';font-weight:700;font-size:15px;
-    background:var(--plum);color:#fff;cursor:pointer;
+    display:block;margin:14px auto 0;border:none;border-radius:999px;padding:11px 26px;
+    font-family:'Baloo 2';font-weight:700;font-size:15px;background:var(--plum);color:#fff;cursor:pointer;
   }
-  .donebox{
-    text-align:center;padding:20px 6px;
-  }
+  .donebox{text-align:center;padding:20px 6px;}
   .donebox .big{font-size:48px;}
   .donebox h3{font-family:'Baloo 2';margin:6px 0;}
+  .donebox p.msg{font-weight:700;color:#6d6690;}
   .retrybtn{
-    border:none;border-radius:999px;padding:10px 22px;
-    background:var(--sun);font-family:'Baloo 2';font-weight:700;
-    color:var(--plum);cursor:pointer;margin-top:8px;box-shadow:0 3px 0 #E0A821;
+    border:none;border-radius:999px;padding:10px 22px;background:var(--sun);font-family:'Baloo 2';
+    font-weight:700;color:var(--plum);cursor:pointer;margin-top:8px;box-shadow:0 3px 0 #E0A821;
   }
-
   .rule{
-    background:#F6F2E4;border-radius:16px;padding:14px;margin-bottom:14px;
-    font-size:14px;font-weight:700;line-height:1.5;
+    background:#F6F2E4;border-radius:16px;padding:14px;margin-bottom:14px;font-size:14px;
+    font-weight:700;line-height:1.5;
   }
   .rule b.g1{color:var(--sky);}
   .rule b.g2{color:var(--coral);}
+  .rule.pt{background:#EAF7F1;}
+  .rule.pt b.g1{color:var(--teal);}
+  .rule.pt b.g2{color:var(--coral);}
 
   .burst{
-    position:fixed;inset:0;pointer-events:none;
-    display:flex;align-items:center;justify-content:center;
+    position:fixed;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;
     font-size:70px;z-index:99;opacity:0;
   }
   .burst.show{animation:pop .7s ease-out;}
@@ -194,36 +191,158 @@
     30%{opacity:1;transform:scale(1.15) rotate(6deg);}
     100%{opacity:0;transform:scale(1.4) rotate(0);}
   }
-  footer{
-    text-align:center;font-size:12px;color:#B3A98A;padding:10px 0;font-weight:700;
+  footer{text-align:center;font-size:12px;color:#B3A98A;padding:10px 0;font-weight:700;}
+
+  /* ---------- PT home menu ---------- */
+  .ptmenu{display:flex;flex-direction:column;gap:12px;margin-top:4px;}
+  .ptmenubtn{
+    border:none;border-radius:18px;padding:18px;font-family:'Baloo 2';font-weight:700;
+    font-size:16px;display:flex;align-items:center;gap:14px;cursor:pointer;color:#fff;
+    box-shadow:0 5px 0 rgba(0,0,0,.15);text-align:left;
   }
+  .ptmenubtn .em{font-size:26px;}
+  .ptmenubtn.a{background:linear-gradient(135deg,#2FBF8F,#249c74);}
+  .ptmenubtn.b{background:linear-gradient(135deg,#3FA7E1,#2f7fb0);}
+  .ptmenubtn.c{background:linear-gradient(135deg,#8E6FD1,#6d51ab);}
+  .ptmenubtn.d{background:linear-gradient(135deg,#FF7FAE,#d95c8a);}
+
+  /* ---------- Dashboard ---------- */
+  .dashrow{
+    display:flex;justify-content:space-between;align-items:center;padding:11px 4px;
+    border-bottom:2px dashed var(--line);font-weight:800;font-size:14px;
+  }
+  .dashrow:last-child{border-bottom:none;}
+  .dashbig{font-family:'Baloo 2';font-size:20px;color:var(--teal);}
+  .themebar{background:#EEE6D2;border-radius:999px;height:14px;overflow:hidden;flex:1;margin:0 10px;}
+  .themebar span{display:block;height:100%;background:var(--teal);}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div class="title">🎡 <span>Parque das Palavras</span></div>
-    <div class="stars">⭐ <span id="starcount">0</span></div>
-  </header>
 
-  <div class="track">
-    <svg viewBox="0 0 400 60" preserveAspectRatio="none">
-      <path d="M0,45 Q50,5 100,45 T200,45 T300,45 T400,45" fill="none" stroke="#E7DCC0" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>
-    </svg>
-    <div class="stops" id="stops"></div>
+  <!-- ================= HOME / LIBRARY ================= -->
+  <div class="screen active" id="screen-home">
+    <div class="homehead">
+      <div style="font-size:44px;">📚</div>
+      <h1>Biblioteca de Estudos</h1>
+      <p>Escolhe o que vamos estudar hoje, Samuel!</p>
+    </div>
+    <div class="subjectgrid">
+      <button class="subjectcard es" onclick="showScreen('es')">
+        <span class="emoji">🎡</span>
+        <span>
+          <h3>Español</h3>
+          <p>Parque das Palavras — reparo para la prueba</p>
+        </span>
+      </button>
+      <button class="subjectcard pt" onclick="showScreen('pt')">
+        <span class="emoji">🕵️‍♂️</span>
+        <span>
+          <h3>Português</h3>
+          <p>Detetive das Palavras — ortografia U, L, C, Z, S e Ç</p>
+        </span>
+      </button>
+      <button class="subjectcard sci" onclick="showScreen('sci')">
+        <span class="emoji">🔬</span>
+        <span>
+          <h3>Ciências</h3>
+          <p>Comer e beber, ciclos, cadeias e teias alimentares</p>
+        </span>
+      </button>
+    </div>
+    <footer style="margin-top:22px;">Toca numa matéria pra começar a estudar 🚀</footer>
   </div>
 
-  <div class="stationbar" id="stationbar"></div>
+  <!-- ================= ESPAÑOL ================= -->
+  <div class="screen" id="screen-es">
+    <header>
+      <button class="backbtn" onclick="showScreen('home')">⬅ Biblioteca</button>
+      <div class="stars">⭐ <span id="es-starcount">0</span></div>
+    </header>
+    <div class="homehead" style="padding-top:2px;">
+      <div class="title" style="justify-content:center;">🎡 <span>Parque das Palavras</span></div>
+    </div>
 
-  <div class="panel" id="panel"></div>
+    <div class="track">
+      <svg viewBox="0 0 400 60" preserveAspectRatio="none">
+        <path d="M0,45 Q50,5 100,45 T200,45 T300,45 T400,45" fill="none" stroke="#E7DCC0" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>
+      </svg>
+      <div class="stops" id="es-stops"></div>
+    </div>
 
-  <footer>Toca uma estação, estuda as fichas 📖 e depois joga o desafio 🎯 — ganha estrelas a cada acerto!</footer>
+    <div class="stationbar" id="es-stationbar"></div>
+    <div class="panel" id="es-panel"></div>
+    <footer>Toca uma estação, estuda as fichas 📖 e depois joga o desafio 🎯 — ganha estrelas a cada acerto!</footer>
+  </div>
+
+  <!-- ================= PORTUGUÊS ================= -->
+  <div class="screen" id="screen-pt">
+    <header>
+      <button class="backbtn" onclick="showScreen('home')">⬅ Biblioteca</button>
+      <div class="stars">🧠 <span id="pt-scorecount">0</span></div>
+    </header>
+    <div class="homehead" style="padding-top:2px;">
+      <div class="title" style="justify-content:center;">🕵️‍♂️ <span>Detetive das Palavras</span></div>
+      <p style="margin-top:4px;">Vamos treinar Português, Samuel?</p>
+    </div>
+    <div class="panel" id="pt-panel"></div>
+  </div>
+
+  <!-- ================= CIÊNCIAS ================= -->
+  <div class="screen" id="screen-sci">
+    <header>
+      <button class="backbtn" onclick="showScreen('home')">⬅ Biblioteca</button>
+      <div class="stars">🧪 <span id="sci-scorecount">0</span></div>
+    </header>
+    <div class="homehead" style="padding-top:2px;">
+      <div class="title" style="justify-content:center;">🔬 <span>Laboratório de Ciências</span></div>
+      <p style="margin-top:4px;">📅 Hoje: 15 de agosto de 2026 — reparo para a prova!</p>
+    </div>
+    <div class="panel" id="sci-panel"></div>
+  </div>
+
 </div>
 
 <div class="burst" id="burst"></div>
 
 <script>
-const DATA = [
+/* =========================================================
+   SHARED HELPERS
+   ========================================================= */
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html!==undefined) e.innerHTML = html;
+  return e;
+}
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function burst(txt){
+  const b = document.getElementById('burst');
+  b.textContent = txt;
+  b.classList.remove('show');
+  void b.offsetWidth;
+  b.classList.add('show');
+}
+const inited = { es:false, pt:false, sci:false };
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if(name==='es' && !inited.es){ inited.es = true; esInit(); }
+  if(name==='pt' && !inited.pt){ inited.pt = true; ptInit(); }
+  if(name==='sci' && !inited.sci){ inited.sci = true; sciInit(); }
+}
+
+/* =========================================================
+   ESPAÑOL — Parque das Palavras
+   ========================================================= */
+const esDATA = [
   { id:0, emoji:'🔢', short:'Números', color:'#3FA7E1',
     title:'🔢 Números com letras',
     sub:'Toca na ficha para ver a resposta. Depois joga!',
@@ -429,24 +548,15 @@ const DATA = [
   }
 ];
 
-let stars = 0;
-let current = 0;
-let mode = 'study';
-let quizIdx = 0;
-let quizScore = 0;
-let answered = false;
-let completed = new Set();
+let esStars = 0;
+let esCurrent = 0;
+let esMode = 'study';
+let esQuizIdx = 0;
+let esQuizScore = 0;
+let esAnswered = false;
+let esCompleted = new Set();
 
-function shuffleArray(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-
-function buildQuizSession(st){
+function esBuildQuizSession(st){
   const pool = shuffleArray(st.quiz);
   const picked = pool.slice(0, Math.min(10, pool.length));
   return picked.map(item=>{
@@ -457,132 +567,462 @@ function buildQuizSession(st){
   });
 }
 
-function el(tag, cls, html){
-  const e = document.createElement(tag);
-  if(cls) e.className = cls;
-  if(html!==undefined) e.innerHTML = html;
-  return e;
-}
-
-function renderStops(){
-  const stops = document.getElementById('stops');
+function esRenderStops(){
+  const stops = document.getElementById('es-stops');
   stops.innerHTML='';
-  DATA.forEach(st=>{
-    const d = el('div','stop'+(completed.has(st.id)?' done':'')+(st.id===current?' current':''), completed.has(st.id)?'✓':st.emoji);
+  esDATA.forEach(st=>{
+    const d = el('div','stop'+(esCompleted.has(st.id)?' done':'')+(st.id===esCurrent?' current':''), esCompleted.has(st.id)?'✓':st.emoji);
     stops.appendChild(d);
   });
 }
-
-function renderStationbar(){
-  const bar = document.getElementById('stationbar');
+function esRenderStationbar(){
+  const bar = document.getElementById('es-stationbar');
   bar.innerHTML='';
-  DATA.forEach(st=>{
-    const b = el('button','stbtn'+(st.id===current?' active':''));
+  esDATA.forEach(st=>{
+    const b = el('button','stbtn'+(st.id===esCurrent?' active':''));
     b.style.background = st.color;
     b.innerHTML = `<span class="em">${st.emoji}</span><span>${st.short}</span>`;
-    b.onclick = ()=>{ current = st.id; mode='study'; render(); };
+    b.onclick = ()=>{ esCurrent = st.id; esMode='study'; esRender(); };
     bar.appendChild(b);
   });
 }
-
-function burst(txt){
-  const b = document.getElementById('burst');
-  b.textContent = txt;
-  b.classList.remove('show');
-  void b.offsetWidth;
-  b.classList.add('show');
+function esAddStar(n){
+  esStars += n;
+  document.getElementById('es-starcount').textContent = esStars;
 }
-
-function addStar(n){
-  stars += n;
-  document.getElementById('starcount').textContent = stars;
-}
-
-function renderPanel(){
-  const st = DATA[current];
-  const panel = document.getElementById('panel');
+function esRenderPanel(){
+  const st = esDATA[esCurrent];
+  const panel = document.getElementById('es-panel');
   panel.innerHTML = '';
 
-  const h2 = el('h2','', `${st.title}`);
-  const sub = el('p','sub', st.sub);
-  panel.appendChild(h2);
-  panel.appendChild(sub);
+  panel.appendChild(el('h2','', st.title));
+  panel.appendChild(el('p','sub', st.sub));
 
   const modebar = el('div','modebar');
-  const b1 = el('button','modebtn'+(mode==='study'?' on':''),'📖 Estudiar');
-  const b2 = el('button','modebtn'+(mode==='quiz'?' on':''),'🎯 Jugar');
-  b1.onclick = ()=>{ mode='study'; render(); };
-  b2.onclick = ()=>{ mode='quiz'; st.activeQuiz = buildQuizSession(st); quizIdx=0; quizScore=0; answered=false; render(); };
+  const b1 = el('button','modebtn'+(esMode==='study'?' on':''),'📖 Estudiar');
+  const b2 = el('button','modebtn'+(esMode==='quiz'?' on':''),'🎯 Jugar');
+  b1.onclick = ()=>{ esMode='study'; esRender(); };
+  b2.onclick = ()=>{ esMode='quiz'; st.activeQuiz = esBuildQuizSession(st); esQuizIdx=0; esQuizScore=0; esAnswered=false; esRender(); };
   modebar.appendChild(b1); modebar.appendChild(b2);
   panel.appendChild(modebar);
 
-  if(st.rule){
-    panel.appendChild(el('div','rule', st.rule));
-  }
+  if(st.rule){ panel.appendChild(el('div','rule', st.rule)); }
 
-  if(mode==='study'){
+  if(esMode==='study'){
     const grid = el('div','cardgrid');
     st.cards.forEach(c=>{
       const wrap = el('div','flip');
       const inner = el('div','flip-inner');
-      const front = el('div','face front', c.f);
-      const back = el('div','face back', c.b);
-      inner.appendChild(front); inner.appendChild(back);
+      inner.appendChild(el('div','face front', c.f));
+      inner.appendChild(el('div','face back', c.b));
       wrap.appendChild(inner);
       wrap.onclick = ()=> wrap.classList.toggle('on');
       grid.appendChild(wrap);
     });
     panel.appendChild(grid);
   } else {
-    renderQuiz(panel, st);
+    esRenderQuiz(panel, st);
   }
 }
-
-function renderQuiz(panel, st){
-  if(!st.activeQuiz){ st.activeQuiz = buildQuizSession(st); }
+function esRenderQuiz(panel, st){
+  if(!st.activeQuiz){ st.activeQuiz = esBuildQuizSession(st); }
   const session = st.activeQuiz;
 
-  if(quizIdx >= session.length){
-    const pct = Math.round((quizScore/session.length)*100);
+  if(esQuizIdx >= session.length){
+    const pct = Math.round((esQuizScore/session.length)*100);
     const box = el('div','donebox');
     const emoji = pct>=80?'🏆':pct>=50?'🌟':'💪';
-    box.innerHTML = `<div class="big">${emoji}</div><h3>¡Terminaste! ${quizScore}/${session.length} (${pct}%)</h3>`;
-    if(pct>=80){ completed.add(st.id); renderStops(); }
+    box.innerHTML = `<div class="big">${emoji}</div><h3>¡Terminaste! ${esQuizScore}/${session.length} (${pct}%)</h3>`;
+    if(pct>=80){ esCompleted.add(st.id); esRenderStops(); }
     const retry = el('button','retrybtn','🔁 Jugar de nuevo (preguntas nuevas)');
-    retry.onclick = ()=>{ st.activeQuiz = buildQuizSession(st); quizIdx=0; quizScore=0; answered=false; render(); };
+    retry.onclick = ()=>{ st.activeQuiz = esBuildQuizSession(st); esQuizIdx=0; esQuizScore=0; esAnswered=false; esRender(); };
     box.appendChild(retry);
     panel.appendChild(box);
     if(pct>=80) burst('🏆');
     return;
   }
-  const item = session[quizIdx];
+  const item = session[esQuizIdx];
   const qhead = el('div','qhead');
-  qhead.innerHTML = `<span class="qcount">Pregunta ${quizIdx+1}/${session.length}</span><span class="qcount">⭐ ${quizScore}</span>`;
+  qhead.innerHTML = `<span class="qcount">Pregunta ${esQuizIdx+1}/${session.length}</span><span class="qcount">⭐ ${esQuizScore}</span>`;
   panel.appendChild(qhead);
   panel.appendChild(el('div','qtext', item.q));
 
   const fb = el('div','feedback','');
-  answered = false;
+  esAnswered = false;
 
   item.opts.forEach((optTxt, i)=>{
     const btn = el('button','opt', optTxt);
     btn.onclick = ()=>{
-      if(answered) return;
-      answered = true;
+      if(esAnswered) return;
+      esAnswered = true;
       const allBtns = panel.querySelectorAll('.opt');
       if(i === item.a){
         btn.classList.add('correct');
         fb.textContent = '🎉 ¡Correcto!';
-        quizScore++;
-        addStar(1);
+        esQuizScore++;
+        esAddStar(1);
         burst('⭐');
       } else {
         btn.classList.add('wrong');
         allBtns[item.a].classList.add('correct');
         fb.textContent = '¡Casi! La respuesta era: ' + item.opts[item.a];
       }
-      const next = el('button','nextbtn', quizIdx+1<session.length ? 'Siguiente ➜' : 'Ver resultado 🏁');
-      next.onclick = ()=>{ quizIdx++; render(); };
+      const next = el('button','nextbtn', esQuizIdx+1<session.length ? 'Siguiente ➜' : 'Ver resultado 🏁');
+      next.onclick = ()=>{ esQuizIdx++; esRender(); };
+      panel.appendChild(next);
+    };
+    panel.appendChild(btn);
+  });
+  panel.appendChild(fb);
+}
+function esRender(){
+  esRenderStops();
+  esRenderStationbar();
+  esRenderPanel();
+}
+function esInit(){ esRender(); }
+
+/* =========================================================
+   PORTUGUÊS — Detetive das Palavras (U, L, C, Z, S, Ç)
+   ========================================================= */
+const PT_BANK = [
+  {id:1, theme:'ul', q:'Qual palavra termina com U?', opts:['papel','chapéu','animal','azul'], a:1},
+  {id:2, theme:'ul', q:'Qual palavra termina com L?', opts:['céu','chapéu','papel','troféu'], a:2},
+  {id:3, theme:'ul', q:'Complete: CHAPÉ__', opts:['L','U','Z','Ç'], a:1, hint:'Pense no plural: chapéus.'},
+  {id:4, theme:'ul', q:'Complete: ANIMA__', opts:['U','S','L','Z'], a:2, hint:'Pense no plural: animais.'},
+  {id:5, theme:'ul', q:'Qual é o plural de PAPEL?', opts:['papels','papeus','papéis','papelis'], a:2},
+  {id:6, theme:'ul', q:'Qual é o plural de CÉU?', opts:['céus','céis','cels','céu'], a:0},
+  {id:7, theme:'ul', q:'Qual é o plural de AZUL?', opts:['azuls','azuis','azuus','azéis'], a:1},
+  {id:8, theme:'ul', q:'Qual é o plural de CHAPÉU?', opts:['chapéis','chapéus','chapéls','chapéuis'], a:1},
+  {id:9, theme:'ul', q:'Qual palavra está correta?', opts:['animau','animal','animall','animao'], a:1},
+  {id:10, theme:'ul', q:'Qual palavra está correta?', opts:['trofél','troféu','troféol','troféuz'], a:1},
+  {id:11, theme:'ul', q:'Complete: "O cachorro é ____."', opts:['mal','mau','maul','mao'], a:1, hint:'MAU é o contrário de BOM.'},
+  {id:12, theme:'ul', q:'Complete: "Ele se comportou ____."', opts:['mau','mal','maul','mao'], a:1, hint:'MAL é o contrário de BEM.'},
+  {id:13, theme:'ul', q:'Qual é o plural de SOL?', opts:['sols','sous','sóis','sóls'], a:2},
+  {id:14, theme:'ul', q:'Qual é o plural de DEGRAU?', opts:['degraus','degrais','degrails','degráus'], a:0},
+  {id:15, theme:'ul', q:'Qual dupla está correta?', opts:['papel → papéus','papel → papéis','céu → céus','B e C'], a:3},
+  {id:16, theme:'ul', q:'Qual palavra termina com U?', opts:['azul','farol','degrau','papel'], a:2},
+  {id:17, theme:'ul', q:'Qual palavra termina com L?', opts:['chapéu','céu','farol','degrau'], a:2},
+  {id:18, theme:'ul', q:'Complete: TROFÉ__', opts:['L','U','S','Z'], a:1, hint:'Pense no plural: troféus.'},
+  {id:19, theme:'ul', q:'Complete: FARO__', opts:['U','Ç','L','Z'], a:2, hint:'Pense no plural: faróis.'},
+  {id:20, theme:'ul', q:'Qual frase está correta?', opts:['O papéu caiu.','O papel caiu.','O papeu caiu.','O papell caiu.'], a:1},
+
+  {id:21, theme:'csz', q:'Complete: CORA__ÃO', opts:['S','Z','Ç','C'], a:2, hint:'Pensa numa parte do nosso corpo que bate.'},
+  {id:22, theme:'csz', q:'Complete: PRA__A', opts:['Ç','S','Z','C'], a:0},
+  {id:23, theme:'csz', q:'Complete: CABE__A', opts:['S','Z','Ç','C'], a:2},
+  {id:24, theme:'csz', q:'Qual palavra está correta?', opts:['çidade','cidade','zidade','sidade'], a:1, hint:'O Ç nunca aparece antes de E ou I.'},
+  {id:25, theme:'csz', q:'Qual palavra está correta?', opts:['cinema','zinema','çinema','sinema'], a:0, hint:'O Ç nunca aparece antes de E ou I.'},
+  {id:26, theme:'csz', q:'Qual palavra está correta?', opts:['sapo','zapo','çapo','ssapo'], a:0},
+  {id:27, theme:'csz', q:'Complete: CA__A (casa)', opts:['Ç','S','Z','C'], a:1},
+  {id:28, theme:'csz', q:'Complete: ME__A (mesa)', opts:['S','Z','Ç','C'], a:0},
+  {id:29, theme:'csz', q:'Qual palavra possui Z?', opts:['beleza','cabeça','massa','cidade'], a:0},
+  {id:30, theme:'csz', q:'Qual palavra possui Ç?', opts:['zebra','coração','mesa','cinema'], a:1},
+  {id:31, theme:'csz', q:'Qual palavra possui C com som de /K/?', opts:['cidade','cinema','casa','cedo'], a:2, hint:'C tem som de /K/ antes de A, O, U.'},
+  {id:32, theme:'csz', q:'Qual palavra possui C com som de /S/?', opts:['casa','copo','cubo','cidade'], a:3, hint:'C tem som de /S/ antes de E, I.'},
+  {id:33, theme:'csz', q:'Qual palavra está correta?', opts:['criança','criansa','crianza','criaça'], a:0},
+  {id:34, theme:'csz', q:'Qual palavra está correta?', opts:['açúcar','açucar','assucar','azucar'], a:0},
+  {id:35, theme:'csz', q:'Complete: LI__ÃO', opts:['S','Z','Ç','C'], a:2},
+  {id:36, theme:'csz', q:'Complete: ALMO__O', opts:['S','Z','Ç','C'], a:2},
+  {id:37, theme:'csz', q:'Qual palavra está correta?', opts:['seleção','selecção','selezão','seleçãu'], a:0},
+  {id:38, theme:'csz', q:'Qual palavra está correta?', opts:['natureza','naturesa','naturêza','natureça'], a:0},
+  {id:39, theme:'csz', q:'Qual palavra está correta?', opts:['feliz','felis','felix','feliss'], a:0},
+  {id:40, theme:'csz', q:'Qual palavra está correta?', opts:['arroz','arros','arroç','arôz'], a:0},
+  {id:41, theme:'csz', q:'Qual palavra está correta?', opts:['fazer','faser','fasêr','fazêr'], a:0},
+  {id:42, theme:'csz', q:'Qual palavra está correta?', opts:['massa','masa','maça','maza'], a:0},
+  {id:43, theme:'csz', q:'Qual palavra está correta?', opts:['maçã','massã','mazã','macã'], a:0},
+  {id:44, theme:'csz', q:'Qual palavra está correta?', opts:['passeio','paseio','passeyo','paceio'], a:0},
+  {id:45, theme:'csz', q:'Qual palavra está errada?', opts:['coração','praça','çidade','criança'], a:2},
+  {id:46, theme:'csz', q:'Qual palavra está errada?', opts:['cinema','cebola','çinema','cidade'], a:2},
+  {id:47, theme:'csz', q:'Complete: __EBRA (zebra)', opts:['S','Z','Ç','C'], a:1},
+  {id:48, theme:'csz', q:'Complete: __APO (sapo)', opts:['S','Z','Ç','C'], a:0},
+  {id:49, theme:'csz', q:'Complete: __EBOLA (cebola)', opts:['S','Z','C','Ç'], a:2},
+  {id:50, theme:'csz', q:'Complete: A__ÚCAR (açúcar)', opts:['S','Z','Ç','C'], a:2},
+
+  {id:51, theme:'fam', q:'Qual palavra está relacionada com SELECIONAR?', opts:['seleção','salada','semana','segredo'], a:0, hint:'Pensa numa palavra que fale de "escolher".'},
+  {id:52, theme:'fam', q:'Complete: SELE__ÃO', opts:['S','C','Z','Ç'], a:3},
+  {id:53, theme:'fam', q:'Qual palavra está correta?', opts:['selecionar','seleçionar','selezionar','selecçionar'], a:0},
+  {id:54, theme:'fam', q:'Complete a sequência: SELECIONAR → SELEÇÃO → ______', opts:['seletiva','salada','semana','solução'], a:0, hint:'Nem sempre a mesma família usa a mesma letra!'},
+  {id:55, theme:'fam', q:'Complete: EDUCA__ÃO', opts:['S','Ç','Z','SS'], a:1},
+  {id:56, theme:'fam', q:'Qual palavra pertence à mesma família de EDUCAR?', opts:['educação','estação','coração','seleção'], a:0},
+  {id:57, theme:'fam', q:'Complete: COME__AR', opts:['S','Z','Ç','C'], a:2},
+  {id:58, theme:'fam', q:'Qual palavra pertence à família de COMEÇAR?', opts:['começo','comida','caminho','cinema'], a:0},
+  {id:59, theme:'fam', q:'Complete: PRODU__ÃO', opts:['S','Z','Ç','SS'], a:2},
+  {id:60, theme:'fam', q:'Qual sequência está correta?', opts:['selecionar → seleção → seletiva','seleçionar → selecção → seletiva','selezionar → seleção → seletiva','selecionar → selezão → seletiva'], a:0}
+];
+
+const THEME_LABEL = { ul:'U e L', csz:'C, Z, S e Ç', fam:'Famílias de palavras' };
+const THEME_HINT = {
+  ul: 'Dica geral: tente o plural da palavra! papel → papéis (L) · chapéu → chapéus (U).',
+  csz: 'Dica geral: o Ç nunca aparece antes de E ou I. Olha com atenção o som da palavra.',
+  fam: 'Dica geral: palavras da mesma família têm sentidos parecidos, mas a grafia pode mudar!'
+};
+const ROUND_PATTERN = [
+  {ul:3, csz:5, fam:2}, {ul:3, csz:5, fam:2}, {ul:3, csz:5, fam:2},
+  {ul:3, csz:5, fam:2}, {ul:4, csz:5, fam:1}, {ul:4, csz:5, fam:1}
+];
+
+const ptState = { screen:'home', roundIndex:0, queues:{}, session:[], idx:0, score:0, answered:false, hintOpen:false, log:[], isErrorMode:false };
+
+function ptDefaultPerf(){
+  return { best:0, quizzes:0, questions:0, correct:0, wrong:0,
+    theme:{ ul:{c:0,t:0}, csz:{c:0,t:0}, fam:{c:0,t:0} }, wrongIds:[] };
+}
+function ptLoadPerf(){
+  try{ const raw = localStorage.getItem('ptPerfSamuel'); return raw ? JSON.parse(raw) : ptDefaultPerf(); }
+  catch(e){ return ptDefaultPerf(); }
+}
+function ptSavePerf(p){ try{ localStorage.setItem('ptPerfSamuel', JSON.stringify(p)); }catch(e){} }
+
+function ptEnsureQueue(theme, needed){
+  if(!ptState.queues[theme]) ptState.queues[theme] = [];
+  if(ptState.queues[theme].length < needed){
+    const items = shuffleArray(PT_BANK.filter(q=>q.theme===theme));
+    ptState.queues[theme] = ptState.queues[theme].concat(items);
+  }
+  return ptState.queues[theme].splice(0, needed);
+}
+function ptFormatSession(raw){
+  return shuffleArray(raw).map(item=>{
+    const order = shuffleArray(item.opts.map((o,i)=>i));
+    const newOpts = order.map(i=>item.opts[i]);
+    const newAnswer = order.indexOf(item.a);
+    return { id:item.id, theme:item.theme, q:item.q, opts:newOpts, a:newAnswer, hint:item.hint||THEME_HINT[item.theme] };
+  });
+}
+function ptBuildQuizSession(){
+  const pattern = ROUND_PATTERN[ptState.roundIndex % ROUND_PATTERN.length];
+  ptState.roundIndex++;
+  let picks = [];
+  ['ul','csz','fam'].forEach(theme=>{ picks = picks.concat(ptEnsureQueue(theme, pattern[theme])); });
+  return ptFormatSession(picks);
+}
+function ptBuildErrorSession(){
+  const perf = ptLoadPerf();
+  let raw = perf.wrongIds.map(id=>PT_BANK.find(q=>q.id===id)).filter(Boolean);
+  raw = shuffleArray(raw).slice(0,10);
+  if(raw.length < 10){
+    const usedIds = raw.map(r=>r.id);
+    const extra = shuffleArray(PT_BANK.filter(q=>!usedIds.includes(q.id))).slice(0, 10-raw.length);
+    raw = raw.concat(extra);
+  }
+  return ptFormatSession(raw);
+}
+
+function ptInit(){ ptState.screen='home'; ptRender(); }
+
+function ptRender(){
+  const panel = document.getElementById('pt-panel');
+  panel.innerHTML = '';
+  document.getElementById('pt-scorecount').textContent = ptState.session.length ? `${ptState.score}/${ptState.idx}` : '—';
+  if(ptState.screen==='home') return ptRenderHome(panel);
+  if(ptState.screen==='study') return ptRenderStudy(panel);
+  if(ptState.screen==='quiz') return ptRenderQuiz(panel);
+  if(ptState.screen==='dash') return ptRenderDash(panel);
+}
+
+function ptBackBtn(panel){
+  const b = el('button','backbtn','⬅ Menu');
+  b.style.marginBottom = '14px';
+  b.onclick = ()=>{ ptState.screen='home'; ptRender(); };
+  panel.appendChild(b);
+}
+
+function ptRenderHome(panel){
+  panel.appendChild(el('h2','','🚀 Desafio das Palavras'));
+  panel.appendChild(el('p','sub','Aprender, brincar e ficar cada vez melhor!'));
+
+  const menu = el('div','ptmenu');
+
+  const b1 = el('button','ptmenubtn a');
+  b1.innerHTML = '<span class="em">🎮</span><span>Começar Desafio<br><small style="font-weight:600;opacity:.85;">10 perguntas sorteadas</small></span>';
+  b1.onclick = ()=>{ ptState.isErrorMode=false; ptState.session = ptBuildQuizSession(); ptState.idx=0; ptState.score=0; ptState.log=[]; ptState.hintOpen=false; ptState.screen='quiz'; ptRender(); };
+
+  const b2 = el('button','ptmenubtn b');
+  b2.innerHTML = '<span class="em">📚</span><span>Modo Estudo<br><small style="font-weight:600;opacity:.85;">explicações e fichas</small></span>';
+  b2.onclick = ()=>{ ptState.screen='study'; ptRender(); };
+
+  const b3 = el('button','ptmenubtn c');
+  b3.innerHTML = '<span class="em">🏆</span><span>Meu Desempenho<br><small style="font-weight:600;opacity:.85;">notas e progresso</small></span>';
+  b3.onclick = ()=>{ ptState.screen='dash'; ptRender(); };
+
+  const perf = ptLoadPerf();
+  const b4 = el('button','ptmenubtn d');
+  b4.innerHTML = `<span class="em">🔄</span><span>Treinar meus Erros<br><small style="font-weight:600;opacity:.85;">${perf.wrongIds.length} palavras pra revisar</small></span>`;
+  b4.onclick = ()=>{ ptState.isErrorMode=true; ptState.session = ptBuildErrorSession(); ptState.idx=0; ptState.score=0; ptState.log=[]; ptState.hintOpen=false; ptState.screen='quiz'; ptRender(); };
+
+  menu.appendChild(b1); menu.appendChild(b2); menu.appendChild(b3); menu.appendChild(b4);
+  panel.appendChild(menu);
+}
+
+const PT_STUDY_GROUPS = [
+  { title: '🧠 U ou L?', rule:'Dica do detetive: quando ficar em dúvida entre U e L no final da palavra, tenta colocar no plural! Se sobrar "is" (papéis), a letra escondida é <b class="g2">L</b>. Se sobrar "s" simples (chapéus), a letra escondida é <b class="g1">U</b>.',
+    cards:[
+      {f:'papel', b:'plural: papéis → termina com L'},
+      {f:'chapéu', b:'plural: chapéus → termina com U'},
+      {f:'céu', b:'plural: céus → termina com U'},
+      {f:'animal', b:'plural: animais → termina com L'},
+      {f:'azul', b:'plural: azuis → termina com L'},
+      {f:'sol', b:'plural: sóis → termina com L'},
+      {f:'farol', b:'plural: faróis → termina com L'},
+      {f:'degrau', b:'plural: degraus → termina com U'},
+      {f:'troféu', b:'plural: troféus → termina com U'},
+      {f:'MAU x MAL', b:'MAU = contrário de bom · MAL = contrário de bem'}
+    ]
+  },
+  { title:'🔎 C ou Ç?', rule:'Dica do detetive: o <b class="g2">Ç</b> pode aparecer antes de A, O ou U — mas NUNCA antes de E ou I! Antes de E/I, quem faz o som de /S/ é o <b class="g1">C</b> mesmo.',
+    cards:[
+      {f:'coração', b:'usa Ç (antes de Ã/A)'},
+      {f:'cidade', b:'usa C (antes de I)'},
+      {f:'criança', b:'usa Ç (antes de A)'},
+      {f:'açúcar', b:'usa Ç (antes de Ú)'},
+      {f:'praça', b:'usa Ç (antes de A)'},
+      {f:'começo', b:'usa Ç (antes de O)'},
+      {f:'cinema', b:'usa C (antes de I)'},
+      {f:'cedo', b:'usa C (antes de E)'}
+    ]
+  },
+  { title:'✍️ S, SS ou Z?', rule:'Dica do detetive: no início da palavra o <b class="g1">S</b> soa como S mesmo (sapo). Entre vogais, o S pode soar como Z (casa). O <b class="g2">SS</b> entre vogais faz o som forte de S (massa).',
+    cards:[
+      {f:'sapo', b:'S no início — som de S'},
+      {f:'casa', b:'S entre vogais — som de Z'},
+      {f:'massa', b:'SS entre vogais — som forte de S'},
+      {f:'zebra', b:'Z'},
+      {f:'beleza', b:'Z'},
+      {f:'feliz', b:'termina com Z'}
+    ]
+  },
+  { title:'👨‍👩‍👧 Famílias de palavras', rule:'Dica do detetive: palavras da mesma família têm o mesmo sentido, mas nem sempre usam a mesma letra! Olha com atenção cada uma.',
+    cards:[
+      {f:'selecionar', b:'tem C'},
+      {f:'seleção', b:'tem Ç'},
+      {f:'seletiva', b:'tem S'},
+      {f:'educar → educação → educativo', b:'C → Ç → C'},
+      {f:'começar → começo → comecei', b:'Ç → Ç → C'},
+      {f:'produzir → produção → produtivo', b:'Z → Ç → T'}
+    ]
+  }
+];
+
+function ptRenderStudy(panel){
+  ptBackBtn(panel);
+  panel.appendChild(el('h2','','📚 Modo Estudo'));
+  panel.appendChild(el('p','sub','Toca nas fichas pra virar e ver a explicação'));
+  PT_STUDY_GROUPS.forEach(group=>{
+    panel.appendChild(el('div','grouptitle', group.title));
+    panel.appendChild(el('div','rule pt', group.rule));
+    const grid = el('div','cardgrid');
+    group.cards.forEach(c=>{
+      const wrap = el('div','flip');
+      const inner = el('div','flip-inner');
+      inner.appendChild(el('div','face front', c.f));
+      inner.appendChild(el('div','face back', c.b));
+      wrap.appendChild(inner);
+      wrap.onclick = ()=> wrap.classList.toggle('on');
+      grid.appendChild(wrap);
+    });
+    panel.appendChild(grid);
+  });
+  const startBtn = el('button','nextbtn','🎮 Ir para o Desafio');
+  startBtn.style.marginTop = '18px';
+  startBtn.onclick = ()=>{ ptState.isErrorMode=false; ptState.session = ptBuildQuizSession(); ptState.idx=0; ptState.score=0; ptState.log=[]; ptState.hintOpen=false; ptState.screen='quiz'; ptRender(); };
+  panel.appendChild(startBtn);
+}
+
+function ptFinishQuiz(panel){
+  const total = ptState.session.length;
+  const score = ptState.score;
+  const perf = ptLoadPerf();
+  perf.best = Math.max(perf.best, score);
+  perf.quizzes += 1;
+  perf.questions += total;
+  perf.correct += score;
+  perf.wrong += (total-score);
+  ptState.log.forEach(a=>{
+    perf.theme[a.theme].t++;
+    if(a.correct){ perf.theme[a.theme].c++; perf.wrongIds = perf.wrongIds.filter(id=>id!==a.id); }
+    else if(!perf.wrongIds.includes(a.id)){ perf.wrongIds.push(a.id); }
+  });
+  ptSavePerf(perf);
+
+  let medal, msg;
+  if(score===10){ medal='🏆'; msg='PERFEITO! Você dominou as palavras!'; }
+  else if(score>=8){ medal='🥇'; msg='Muito bem! Você está aprendendo muito!'; }
+  else if(score>=6){ medal='🥉'; msg='Muito bom! Vamos treinar mais um pouquinho?'; }
+  else if(score>=4){ medal='💪'; msg='Você está no caminho certo! Mais uma tentativa!'; }
+  else { medal='🚀'; msg='Não desista! Vamos aprender juntos!'; }
+
+  const box = el('div','donebox');
+  box.innerHTML = `<div class="big">${medal}</div><h3>Sua nota: ${score}/10</h3><p class="msg">${msg}</p>`;
+  const retry = el('button','retrybtn','🔄 Fazer outro desafio (perguntas novas)');
+  retry.onclick = ()=>{ ptState.session = ptState.isErrorMode ? ptBuildErrorSession() : ptBuildQuizSession(); ptState.idx=0; ptState.score=0; ptState.log=[]; ptState.hintOpen=false; ptRender(); };
+  const home = el('button','backbtn','⬅ Menu');
+  home.style.marginTop='10px';
+  home.onclick = ()=>{ ptState.screen='home'; ptRender(); };
+  box.appendChild(retry);
+  box.appendChild(document.createElement('br'));
+  box.appendChild(home);
+  panel.appendChild(box);
+  if(score>=8) burst(medal);
+}
+
+function ptRenderQuiz(panel){
+  if(!ptState.session.length){ ptState.session = ptBuildQuizSession(); }
+  const session = ptState.session;
+
+  if(ptState.idx >= session.length){ return ptFinishQuiz(panel); }
+
+  const item = session[ptState.idx];
+  const qhead = el('div','qhead');
+  qhead.innerHTML = `<span class="qcount">${ptState.isErrorMode?'🔄 Revisão':'Pergunta'} ${ptState.idx+1} de ${session.length}</span><span class="qcount">✅ ${ptState.score}</span>`;
+  panel.appendChild(qhead);
+
+  const pbar = el('div','progressbar');
+  const pfill = el('span'); pfill.style.width = Math.round((ptState.idx/session.length)*100)+'%';
+  pbar.appendChild(pfill);
+  panel.appendChild(pbar);
+
+  panel.appendChild(el('div','qtext', item.q));
+
+  const toolbar = el('div','toolbar');
+  const hintBtn = el('button','toolbtn','💡 Preciso de uma dica');
+  const skipBtn = el('button','toolbtn','⏭️ Pular');
+  toolbar.appendChild(hintBtn); toolbar.appendChild(skipBtn);
+  panel.appendChild(toolbar);
+
+  if(ptState.hintOpen){
+    panel.appendChild(el('div','hintbox', '💡 ' + item.hint));
+  }
+  hintBtn.onclick = ()=>{ ptState.hintOpen = !ptState.hintOpen; ptRender(); };
+  skipBtn.onclick = ()=>{
+    const moved = session.splice(ptState.idx,1)[0];
+    session.push(moved);
+    ptState.hintOpen = false;
+    ptRender();
+  };
+
+  const fb = el('div','feedback','');
+  ptState.answered = false;
+
+  item.opts.forEach((optTxt,i)=>{
+    const btn = el('button','opt', optTxt);
+    btn.onclick = ()=>{
+      if(ptState.answered) return;
+      ptState.answered = true;
+      const allBtns = panel.querySelectorAll('.opt');
+      const correct = (i===item.a);
+      if(correct){
+        btn.classList.add('correct');
+        fb.textContent = '🎉 Muito bem!';
+        ptState.score++;
+        burst('⭐');
+      } else {
+        btn.classList.add('wrong');
+        allBtns[item.a].classList.add('correct');
+        fb.textContent = '💡 Quase! A resposta certa é: ' + item.opts[item.a];
+      }
+      ptState.log.push({ id:item.id, theme:item.theme, correct });
+      const next = el('button','nextbtn', ptState.idx+1<session.length ? 'Siguiente ➜' : 'Ver resultado 🏁');
+      next.onclick = ()=>{ ptState.idx++; ptState.hintOpen=false; ptRender(); };
       panel.appendChild(next);
     };
     panel.appendChild(btn);
@@ -590,12 +1030,402 @@ function renderQuiz(panel, st){
   panel.appendChild(fb);
 }
 
-function render(){
-  renderStops();
-  renderStationbar();
-  renderPanel();
+function ptRenderDash(panel){
+  ptBackBtn(panel);
+  panel.appendChild(el('h2','','📊 Meu Desempenho'));
+  const perf = ptLoadPerf();
+  panel.appendChild(el('p','sub','Samuel'));
+
+  const rows = el('div','');
+  rows.appendChild(el('div','dashrow', `🏆 Melhor nota <span class="dashbig">${perf.best}/10</span>`));
+  rows.appendChild(el('div','dashrow', `📚 Desafios feitos <span class="dashbig">${perf.quizzes}</span>`));
+  rows.appendChild(el('div','dashrow', `✅ Acertos <span class="dashbig">${perf.correct}</span>`));
+  rows.appendChild(el('div','dashrow', `❌ Erros <span class="dashbig">${perf.wrong}</span>`));
+  panel.appendChild(rows);
+
+  panel.appendChild(el('div','grouptitle','Desempenho por tema'));
+  ['ul','csz','fam'].forEach(theme=>{
+    const t = perf.theme[theme];
+    const pct = t.t ? Math.round((t.c/t.t)*100) : 0;
+    const row = el('div','dashrow');
+    const bar = el('div','themebar');
+    const fill = el('span'); fill.style.width = pct+'%';
+    bar.appendChild(fill);
+    row.innerHTML = `<span>${THEME_LABEL[theme]}</span>`;
+    row.appendChild(bar);
+    const pctSpan = el('span','', pct+'%');
+    row.appendChild(pctSpan);
+    panel.appendChild(row);
+  });
+
+  if(perf.wrongIds.length){
+    panel.appendChild(el('p','sub', `Você tem ${perf.wrongIds.length} palavra(s) pra revisar no botão "Treinar meus Erros" 🔄`));
+  } else if(perf.quizzes>0){
+    panel.appendChild(el('p','sub', '🌟 Nenhum erro pendente agora — mandou bem!'));
+  } else {
+    panel.appendChild(el('p','sub', 'Ainda não fez nenhum desafio. Bora começar? 🚀'));
+  }
 }
-render();
+
+/* =========================================================
+   CIÊNCIAS — Laboratório de Ciências
+   (Comer e beber: para quê? · Ciclos, cadeias e teias alimentares)
+   ========================================================= */
+const SCI_BANK = [
+  {id:1, theme:'nutri', q:'Além da água, quais são os componentes mais abundantes no corpo humano?', opts:['Proteínas e lipídios','Vitaminas e sais minerais','Carboidratos e fibras','Açúcares e gorduras trans'], a:0},
+  {id:2, theme:'nutri', q:'Por quais formas o corpo humano perde água naturalmente?', opts:['Suor, urina, fezes, lágrimas e saliva','Somente pelo suor','Somente pela urina','Somente durante o sono'], a:0},
+  {id:3, theme:'nutri', q:'Como se chama a diminuição da quantidade de água e sais minerais no corpo?', opts:['Hidratação','Desidratação','Digestão','Fotossíntese'], a:1},
+  {id:4, theme:'nutri', q:'Quais são sinais de desidratação?', opts:['Olhos fundos, muita sede, boca seca e choro sem lágrimas','Muita energia e sono tranquilo','Aumento de peso rápido','Vontade de comer doce'], a:0},
+  {id:5, theme:'nutri', q:'De onde vem a energia que o corpo precisa para suas atividades?', opts:['Dos alimentos','Somente da água','Do sono','Do ar que respiramos'], a:0},
+  {id:6, theme:'nutri', q:'O que acontece quando o corpo recebe pouca energia por muito tempo?', opts:['Ele usa a própria musculatura e gordura como fonte de energia','Ele produz mais água','Ele para de crescer imediatamente','Nada acontece'], a:0},
+  {id:7, theme:'nutri', q:'Qual processo transforma a comida em energia que o corpo pode usar?', opts:['Digestão','Respiração','Circulação','Hibernação'], a:0},
+  {id:8, theme:'nutri', q:'Cerca de que porcentagem do peso de uma criança é composta de água?', opts:['Mais da metade','Menos de 10%','Quase 100%','Cerca de 5%'], a:0},
+  {id:9, theme:'nutri', q:'Comparando as tabelas nutricionais, qual tem mais cálcio e proteínas: caju in natura ou queijo minas?', opts:['Queijo minas','Caju in natura','Os dois têm a mesma quantidade','Nenhum dos dois tem cálcio'], a:0},
+  {id:10, theme:'nutri', q:'E qual alimento tem mais carboidratos: caju ou queijo minas?', opts:['Caju in natura','Queijo minas','Os dois têm igual quantidade','Nenhum tem carboidrato'], a:0},
+  {id:11, theme:'nutri', q:'Além da água, quais nutrientes vêm diretamente dos alimentos ou são transformados no corpo?', opts:['Proteínas, lipídios, vitaminas e sais minerais','Somente vitaminas','Somente água','Somente carboidratos'], a:0, hint:'É a resposta completa da pergunta 1 do "Agora é com você".'},
+  {id:12, theme:'nutri', q:'Por que corredores comem algo leve (torrada, fruta, iogurte) antes de correr?', opts:['Porque os alimentos fornecem energia e melhoram o desempenho','Porque dá sono','Porque enche o estômago e atrapalha','Não precisam comer nada'], a:0},
+
+  {id:13, theme:'hib', q:'Qual é a diferença principal entre hibernação e torpor?', opts:['Na hibernação o animal fica dias/meses sem se mover; no torpor ele ainda se levanta algumas vezes','Não existe diferença','Torpor é só em répteis; hibernação só em mamíferos','Hibernação dura só uma noite'], a:0},
+  {id:14, theme:'hib', q:'Cite um animal que hiberna.', opts:['Esquilo','Urso-pardo','Guaxinim','Alguns pássaros'], a:0},
+  {id:15, theme:'hib', q:'Cite um animal que entra em torpor.', opts:['Urso-pardo','Marmota','Morcego','Tartaruga'], a:0},
+  {id:16, theme:'hib', q:'Durante a hibernação, o que acontece com as atividades do corpo do animal?', opts:['Diminuem ao máximo: respiração mais devagar e coração bate menos','Aumentam muito','Ficam iguais ao normal','O animal fica mais rápido'], a:0},
+  {id:17, theme:'hib', q:'Por que alguns animais hibernam ou entram em torpor?', opts:['Para economizar energia quando há pouco alimento no inverno','Para crescer mais rápido','Para fugir de predadores o tempo todo','Para produzir mais leite'], a:0},
+  {id:18, theme:'hib', q:'O que acontece com o urso-pardo durante o inverno?', opts:['Entra em torpor, mas ainda pode acordar se estiver em perigo','Hiberna e nunca acorda até a primavera','Não muda seu comportamento','Migra para outro continente'], a:0},
+  {id:19, theme:'hib', q:'Os esquilos costumam perder até quanto do seu peso durante o inverno?', opts:['Metade do peso','Todo o peso','Nenhum peso','O dobro do peso'], a:0},
+  {id:20, theme:'hib', q:'O que esquilos, marmotas, ouriços, algumas tartarugas, abelhas, serpentes e morcegos têm em comum, segundo o texto?', opts:['Todos podem hibernar','Todos voam','Todos vivem no deserto','Todos são carnívoros'], a:0},
+
+  {id:21, theme:'ciclo', q:'A palavra "ciclo" vem do grego e significa o quê?', opts:['Círculo','Água','Vida','Tempo'], a:0},
+  {id:22, theme:'ciclo', q:'Por que a expressão "ciclo da água" usa a palavra ciclo?', opts:['Porque a água passa por mudanças de forma contínua, circulando no ambiente','Porque a água é redonda','Porque só chove em círculos','Porque a água nunca muda de estado'], a:0},
+  {id:23, theme:'ciclo', q:'Qual é a sequência correta do ciclo de vida de um sapo?', opts:['Ovos → girinos → girino com patas → sapo adulto','Sapo adulto → ovos → sapo adulto','Girino → ovos → sapo → girino','Não existe sequência, é aleatório'], a:0},
+  {id:24, theme:'ciclo', q:'Como a matéria é transferida entre os seres vivos?', opts:['Por meio de um ciclo','Por meio de um fluxo','Ela não é transferida','Somente pelo ar'], a:0},
+  {id:25, theme:'ciclo', q:'Como a energia é transferida entre os seres vivos?', opts:['Por meio de um fluxo, em um único sentido','Por meio de um ciclo, voltando à fonte','Ela não é transferida','Somente à noite'], a:0},
+  {id:26, theme:'ciclo', q:'Por que a energia solar NÃO faz parte de um ciclo?', opts:['Porque ela é transferida em um único sentido e não retorna ao Sol','Porque o Sol não emite energia','Porque a Terra não recebe luz solar','Porque a energia se perde antes de chegar à Terra'], a:0},
+  {id:27, theme:'ciclo', q:'O que acontece com a matéria do corpo de um ser vivo após sua morte?', opts:['Ela volta para o ambiente por meio da decomposição','Ela desaparece para sempre','Ela vira água imediatamente','Ela se transforma em luz solar'], a:0},
+  {id:28, theme:'ciclo', q:'Quem são os principais responsáveis por decompor a matéria dos seres vivos mortos?', opts:['Fungos e bactérias (decompositores)','Somente os produtores','Somente os consumidores primários','O Sol'], a:0},
+  {id:29, theme:'ciclo', q:'Se todos os decompositores desaparecessem, o que aconteceria com a matéria dos corpos após a morte?', opts:['Ela não seria decomposta e permaneceria da mesma forma','Nada mudaria','A matéria desapareceria instantaneamente','Os seres vivos parariam de morrer'], a:0},
+  {id:30, theme:'ciclo', q:'Como é possível existir racionamento de água numa cidade, já que o ciclo da água nunca é interrompido?', opts:['O ciclo da água ocorre no planeta todo; a água que deixou de cair ali pode estar caindo em outro lugar','O ciclo da água parou completamente','A água acabou de vez no planeta','Não existe mesmo ciclo da água'], a:0, hint:'Pensa em escala: o ciclo é do planeta inteiro, não só de uma cidade.'},
+
+  {id:31, theme:'teia', q:'Em uma cadeia alimentar, quem produz seu próprio alimento?', opts:['Produtor','Consumidor primário','Consumidor secundário','Decompositor'], a:0},
+  {id:32, theme:'teia', q:'Quem se alimenta diretamente do produtor numa cadeia alimentar?', opts:['Consumidor primário','Consumidor secundário','Decompositor','O Sol'], a:0},
+  {id:33, theme:'teia', q:'Na cadeia capim → lagarta → bem-te-vi → gato-do-mato, quem é o consumidor secundário?', opts:['Bem-te-vi','Lagarta','Capim','Gato-do-mato'], a:0},
+  {id:34, theme:'teia', q:'Na mesma cadeia, quem é o consumidor terciário (o último)?', opts:['Gato-do-mato','Lagarta','Bem-te-vi','Capim'], a:0},
+  {id:35, theme:'teia', q:'O que é uma teia alimentar?', opts:['Várias cadeias alimentares que se misturam, envolvendo mais seres vivos','Uma única cadeia alimentar isolada','Um tipo de decompositor','Um sinônimo de fotossíntese'], a:0},
+  {id:36, theme:'teia', q:'Nas teias alimentares, os decompositores...', opts:['Também se alimentam de todos os seres da teia, mas raramente são desenhados no esquema','Não participam da teia alimentar','São sempre os produtores','Só existem em cadeias, nunca em teias'], a:0},
+  {id:37, theme:'teia', q:'Qual é a fonte original de energia em quase todas as cadeias e teias alimentares?', opts:['A luz do Sol','A água','O solo','O ar'], a:0},
+  {id:38, theme:'teia', q:'Se a fotossíntese de um produtor fosse interrompida, o que aconteceria com os consumidores que dependem dele?', opts:['Poderiam morrer por falta de alimento disponível','Nada aconteceria','Eles passariam a fazer fotossíntese também','Eles se tornariam produtores'], a:0},
+  {id:39, theme:'teia', q:'A energia que passa de um ser vivo para outro numa cadeia alimentar volta para o Sol?', opts:['Não, ela é usada e perdida em forma de calor, sem voltar ao Sol','Sim, ela sempre retorna ao Sol','Só volta durante a noite','Só em cadeias muito curtas'], a:0},
+  {id:40, theme:'teia', q:'Numa teia alimentar, um animal que come tanto plantas quanto pequenos animais pode ocupar que posição?', opts:['Consumidor primário e também secundário, dependendo do alimento','Sempre decompositor','Sempre produtor','Nunca poderia estar na teia'], a:0}
+];
+
+const THEME_LABEL_SCI = { nutri:'Alimentação e água', hib:'Hibernação e torpor', ciclo:'Ciclos da natureza', teia:'Cadeias e teias' };
+const THEME_HINT_SCI = {
+  nutri: 'Dica: pensa em tudo que forma o corpo além da água, e em como perdemos e repomos líquido no dia a dia.',
+  hib: 'Dica: hibernar é dormir bem parado por muito tempo; torpor é descansar bastante, mas ainda se mexer de vez em quando.',
+  ciclo: 'Dica: ciclo é algo que sempre volta ao início, como um círculo — a própria palavra vem do grego pra isso!',
+  teia: 'Dica: segue a seta! Quem come quem? O Sol é sempre o ponto de partida da energia.'
+};
+const ROUND_PATTERN_SCI = [
+  {nutri:3, hib:2, ciclo:2, teia:3},
+  {nutri:3, hib:2, ciclo:3, teia:2},
+  {nutri:3, hib:2, ciclo:2, teia:3},
+  {nutri:3, hib:2, ciclo:3, teia:2}
+];
+
+const sciState = { screen:'home', roundIndex:0, queues:{}, session:[], idx:0, score:0, answered:false, hintOpen:false, log:[], isErrorMode:false };
+
+function sciDefaultPerf(){
+  return { best:0, quizzes:0, questions:0, correct:0, wrong:0,
+    theme:{ nutri:{c:0,t:0}, hib:{c:0,t:0}, ciclo:{c:0,t:0}, teia:{c:0,t:0} }, wrongIds:[] };
+}
+function sciLoadPerf(){
+  try{ const raw = localStorage.getItem('sciPerfSamuel'); return raw ? JSON.parse(raw) : sciDefaultPerf(); }
+  catch(e){ return sciDefaultPerf(); }
+}
+function sciSavePerf(p){ try{ localStorage.setItem('sciPerfSamuel', JSON.stringify(p)); }catch(e){} }
+
+function sciEnsureQueue(theme, needed){
+  if(!sciState.queues[theme]) sciState.queues[theme] = [];
+  if(sciState.queues[theme].length < needed){
+    const items = shuffleArray(SCI_BANK.filter(q=>q.theme===theme));
+    sciState.queues[theme] = sciState.queues[theme].concat(items);
+  }
+  return sciState.queues[theme].splice(0, needed);
+}
+function sciFormatSession(raw){
+  return shuffleArray(raw).map(item=>{
+    const order = shuffleArray(item.opts.map((o,i)=>i));
+    const newOpts = order.map(i=>item.opts[i]);
+    const newAnswer = order.indexOf(item.a);
+    return { id:item.id, theme:item.theme, q:item.q, opts:newOpts, a:newAnswer, hint:item.hint||THEME_HINT_SCI[item.theme] };
+  });
+}
+function sciBuildQuizSession(){
+  const pattern = ROUND_PATTERN_SCI[sciState.roundIndex % ROUND_PATTERN_SCI.length];
+  sciState.roundIndex++;
+  let picks = [];
+  ['nutri','hib','ciclo','teia'].forEach(theme=>{ picks = picks.concat(sciEnsureQueue(theme, pattern[theme])); });
+  return sciFormatSession(picks);
+}
+function sciBuildErrorSession(){
+  const perf = sciLoadPerf();
+  let raw = perf.wrongIds.map(id=>SCI_BANK.find(q=>q.id===id)).filter(Boolean);
+  raw = shuffleArray(raw).slice(0,10);
+  if(raw.length < 10){
+    const usedIds = raw.map(r=>r.id);
+    const extra = shuffleArray(SCI_BANK.filter(q=>!usedIds.includes(q.id))).slice(0, 10-raw.length);
+    raw = raw.concat(extra);
+  }
+  return sciFormatSession(raw);
+}
+
+function sciInit(){ sciState.screen='home'; sciRender(); }
+
+function sciRender(){
+  const panel = document.getElementById('sci-panel');
+  panel.innerHTML = '';
+  document.getElementById('sci-scorecount').textContent = sciState.session.length ? `${sciState.score}/${sciState.idx}` : '—';
+  if(sciState.screen==='home') return sciRenderHome(panel);
+  if(sciState.screen==='study') return sciRenderStudy(panel);
+  if(sciState.screen==='quiz') return sciRenderQuiz(panel);
+  if(sciState.screen==='dash') return sciRenderDash(panel);
+}
+
+function sciBackBtn(panel){
+  const b = el('button','backbtn','⬅ Menu');
+  b.style.marginBottom = '14px';
+  b.onclick = ()=>{ sciState.screen='home'; sciRender(); };
+  panel.appendChild(b);
+}
+
+function sciRenderHome(panel){
+  panel.appendChild(el('h2','','🧪 Desafio de Ciências'));
+  panel.appendChild(el('p','sub','Comer e beber, ciclos, cadeias e teias alimentares!'));
+
+  const menu = el('div','ptmenu');
+
+  const b1 = el('button','ptmenubtn a');
+  b1.innerHTML = '<span class="em">🎮</span><span>Começar Desafio<br><small style="font-weight:600;opacity:.85;">10 perguntas sorteadas</small></span>';
+  b1.onclick = ()=>{ sciState.isErrorMode=false; sciState.session = sciBuildQuizSession(); sciState.idx=0; sciState.score=0; sciState.log=[]; sciState.hintOpen=false; sciState.screen='quiz'; sciRender(); };
+
+  const b2 = el('button','ptmenubtn b');
+  b2.innerHTML = '<span class="em">📚</span><span>Modo Estudo<br><small style="font-weight:600;opacity:.85;">explicações e fichas</small></span>';
+  b2.onclick = ()=>{ sciState.screen='study'; sciRender(); };
+
+  const b3 = el('button','ptmenubtn c');
+  b3.innerHTML = '<span class="em">🏆</span><span>Meu Desempenho<br><small style="font-weight:600;opacity:.85;">notas e progresso</small></span>';
+  b3.onclick = ()=>{ sciState.screen='dash'; sciRender(); };
+
+  const perf = sciLoadPerf();
+  const b4 = el('button','ptmenubtn d');
+  b4.innerHTML = `<span class="em">🔄</span><span>Treinar meus Erros<br><small style="font-weight:600;opacity:.85;">${perf.wrongIds.length} questões pra revisar</small></span>`;
+  b4.onclick = ()=>{ sciState.isErrorMode=true; sciState.session = sciBuildErrorSession(); sciState.idx=0; sciState.score=0; sciState.log=[]; sciState.hintOpen=false; sciState.screen='quiz'; sciRender(); };
+
+  menu.appendChild(b1); menu.appendChild(b2); menu.appendChild(b3); menu.appendChild(b4);
+  panel.appendChild(menu);
+}
+
+const SCI_STUDY_GROUPS = [
+  { title:'🥤 Água e Alimentos', rule:'Dica do laboratório: além da <b class="g1">água</b>, o corpo humano é formado por <b class="g1">proteínas, lipídios (gorduras), carboidratos, sais minerais e vitaminas</b> — tudo isso vem dos alimentos!',
+    cards:[
+      {f:'Componentes do corpo (além da água)', b:'Proteínas, lipídios, carboidratos, sais minerais e vitaminas'},
+      {f:'Como o corpo perde água?', b:'Suor, urina, fezes, lágrimas e saliva'},
+      {f:'Sinais de desidratação', b:'Olhos fundos, muita sede, boca seca e choro sem lágrimas'},
+      {f:'De onde vem a energia do corpo?', b:'Dos alimentos, transformados pela digestão'},
+      {f:'Pouca energia por muito tempo', b:'O corpo passa a usar a própria musculatura e gordura'}
+    ]
+  },
+  { title:'🐻 Hibernação e Torpor', rule:'Dica do laboratório: <b class="g1">hibernação</b> = o animal fica dias ou meses sem se mover. <b class="g2">Torpor</b> = o animal ainda se levanta de vez em quando, gastando um pouco mais de energia.',
+    cards:[
+      {f:'Hibernam', b:'Esquilos, marmotas, ouriços, algumas tartarugas, abelhas, serpentes, morcegos'},
+      {f:'Entram em torpor', b:'Ursos-pardos, guaxinins, alguns pássaros'},
+      {f:'Por que isso acontece?', b:'Para economizar energia quando há pouco alimento no inverno'},
+      {f:'Esquilo no inverno', b:'Pode perder até metade do seu peso'},
+      {f:'Urso-pardo em torpor', b:'Atividades ficam lentas, mas ele ainda pode acordar em perigo'}
+    ]
+  },
+  { title:'🔄 Ciclos da Natureza', rule:'Dica do laboratório: "ciclo" vem do grego e significa <b class="g1">círculo</b>! A <b class="g1">matéria</b> se move em ciclo (sempre volta), mas a <b class="g2">energia</b> se move em fluxo (só uma direção, nunca volta ao Sol).',
+    cards:[
+      {f:'Ciclo de vida do sapo', b:'Ovos → girinos → girino com patas → sapo adulto'},
+      {f:'Ciclo da matéria', b:'A matéria passa de um ser vivo a outro e volta ao ambiente pela decomposição'},
+      {f:'Fluxo de energia', b:'Vem do Sol e passa por produtores e consumidores — nunca volta ao Sol'},
+      {f:'Quem decompõe a matéria?', b:'Fungos e bactérias (decompositores)'},
+      {f:'Ciclo da água numa seca', b:'O ciclo é do planeta inteiro — a chuva que falta ali cai em outro lugar'}
+    ]
+  },
+  { title:'🕸️ Cadeias e Teias Alimentares', rule:'Dica do laboratório: <b class="g1">produtor</b> (planta) → <b class="g1">consumidor primário</b> → <b class="g2">consumidor secundário</b> → <b class="g2">consumidor terciário</b>. Quando várias cadeias se misturam, viram uma <b class="g1">teia alimentar</b>!',
+    cards:[
+      {f:'Produtor', b:'Produz seu próprio alimento (ex: capim, planta)'},
+      {f:'Consumidor primário', b:'Come o produtor (ex: lagarta, grilo)'},
+      {f:'Consumidor secundário', b:'Come o consumidor primário (ex: bem-te-vi)'},
+      {f:'Consumidor terciário', b:'Come o consumidor secundário (ex: gato-do-mato)'},
+      {f:'Teia alimentar', b:'Várias cadeias alimentares que se misturam'},
+      {f:'Fonte original de energia', b:'A luz do Sol'}
+    ]
+  }
+];
+
+function sciRenderStudy(panel){
+  sciBackBtn(panel);
+  panel.appendChild(el('h2','','📚 Modo Estudo'));
+  panel.appendChild(el('p','sub','Toca nas fichas pra virar e ver a explicação'));
+  SCI_STUDY_GROUPS.forEach(group=>{
+    panel.appendChild(el('div','grouptitle', group.title));
+    panel.appendChild(el('div','rule pt', group.rule));
+    const grid = el('div','cardgrid');
+    group.cards.forEach(c=>{
+      const wrap = el('div','flip');
+      const inner = el('div','flip-inner');
+      inner.appendChild(el('div','face front', c.f));
+      inner.appendChild(el('div','face back', c.b));
+      wrap.appendChild(inner);
+      wrap.onclick = ()=> wrap.classList.toggle('on');
+      grid.appendChild(wrap);
+    });
+    panel.appendChild(grid);
+  });
+  const startBtn = el('button','nextbtn','🎮 Ir para o Desafio');
+  startBtn.style.marginTop = '18px';
+  startBtn.onclick = ()=>{ sciState.isErrorMode=false; sciState.session = sciBuildQuizSession(); sciState.idx=0; sciState.score=0; sciState.log=[]; sciState.hintOpen=false; sciState.screen='quiz'; sciRender(); };
+  panel.appendChild(startBtn);
+}
+
+function sciFinishQuiz(panel){
+  const total = sciState.session.length;
+  const score = sciState.score;
+  const perf = sciLoadPerf();
+  perf.best = Math.max(perf.best, score);
+  perf.quizzes += 1;
+  perf.questions += total;
+  perf.correct += score;
+  perf.wrong += (total-score);
+  sciState.log.forEach(a=>{
+    perf.theme[a.theme].t++;
+    if(a.correct){ perf.theme[a.theme].c++; perf.wrongIds = perf.wrongIds.filter(id=>id!==a.id); }
+    else if(!perf.wrongIds.includes(a.id)){ perf.wrongIds.push(a.id); }
+  });
+  sciSavePerf(perf);
+
+  let medal, msg;
+  if(score===10){ medal='🏆'; msg='PERFEITO! Você dominou o conteúdo!'; }
+  else if(score>=8){ medal='🥇'; msg='Muito bem! Você está aprendendo muito!'; }
+  else if(score>=6){ medal='🥉'; msg='Muito bom! Vamos treinar mais um pouquinho?'; }
+  else if(score>=4){ medal='💪'; msg='Você está no caminho certo! Mais uma tentativa!'; }
+  else { medal='🚀'; msg='Não desista! Vamos aprender juntos!'; }
+
+  const box = el('div','donebox');
+  box.innerHTML = `<div class="big">${medal}</div><h3>Sua nota: ${score}/10</h3><p class="msg">${msg}</p>`;
+  const retry = el('button','retrybtn','🔄 Fazer outro desafio (perguntas novas)');
+  retry.onclick = ()=>{ sciState.session = sciState.isErrorMode ? sciBuildErrorSession() : sciBuildQuizSession(); sciState.idx=0; sciState.score=0; sciState.log=[]; sciState.hintOpen=false; sciRender(); };
+  const home = el('button','backbtn','⬅ Menu');
+  home.style.marginTop='10px';
+  home.onclick = ()=>{ sciState.screen='home'; sciRender(); };
+  box.appendChild(retry);
+  box.appendChild(document.createElement('br'));
+  box.appendChild(home);
+  panel.appendChild(box);
+  if(score>=8) burst(medal);
+}
+
+function sciRenderQuiz(panel){
+  if(!sciState.session.length){ sciState.session = sciBuildQuizSession(); }
+  const session = sciState.session;
+
+  if(sciState.idx >= session.length){ return sciFinishQuiz(panel); }
+
+  const item = session[sciState.idx];
+  const qhead = el('div','qhead');
+  qhead.innerHTML = `<span class="qcount">${sciState.isErrorMode?'🔄 Revisão':'Pergunta'} ${sciState.idx+1} de ${session.length}</span><span class="qcount">✅ ${sciState.score}</span>`;
+  panel.appendChild(qhead);
+
+  const pbar = el('div','progressbar');
+  const pfill = el('span'); pfill.style.width = Math.round((sciState.idx/session.length)*100)+'%';
+  pbar.appendChild(pfill);
+  panel.appendChild(pbar);
+
+  panel.appendChild(el('div','qtext', item.q));
+
+  const toolbar = el('div','toolbar');
+  const hintBtn = el('button','toolbtn','💡 Preciso de uma dica');
+  const skipBtn = el('button','toolbtn','⏭️ Pular');
+  toolbar.appendChild(hintBtn); toolbar.appendChild(skipBtn);
+  panel.appendChild(toolbar);
+
+  if(sciState.hintOpen){
+    panel.appendChild(el('div','hintbox', '💡 ' + item.hint));
+  }
+  hintBtn.onclick = ()=>{ sciState.hintOpen = !sciState.hintOpen; sciRender(); };
+  skipBtn.onclick = ()=>{
+    const moved = session.splice(sciState.idx,1)[0];
+    session.push(moved);
+    sciState.hintOpen = false;
+    sciRender();
+  };
+
+  const fb = el('div','feedback','');
+  sciState.answered = false;
+
+  item.opts.forEach((optTxt,i)=>{
+    const btn = el('button','opt', optTxt);
+    btn.onclick = ()=>{
+      if(sciState.answered) return;
+      sciState.answered = true;
+      const allBtns = panel.querySelectorAll('.opt');
+      const correct = (i===item.a);
+      if(correct){
+        btn.classList.add('correct');
+        fb.textContent = '🎉 Muito bem!';
+        sciState.score++;
+        burst('⭐');
+      } else {
+        btn.classList.add('wrong');
+        allBtns[item.a].classList.add('correct');
+        fb.textContent = '💡 Quase! A resposta certa é: ' + item.opts[item.a];
+      }
+      sciState.log.push({ id:item.id, theme:item.theme, correct });
+      const next = el('button','nextbtn', sciState.idx+1<session.length ? 'Próxima ➜' : 'Ver resultado 🏁');
+      next.onclick = ()=>{ sciState.idx++; sciState.hintOpen=false; sciRender(); };
+      panel.appendChild(next);
+    };
+    panel.appendChild(btn);
+  });
+  panel.appendChild(fb);
+}
+
+function sciRenderDash(panel){
+  sciBackBtn(panel);
+  panel.appendChild(el('h2','','📊 Meu Desempenho'));
+  const perf = sciLoadPerf();
+  panel.appendChild(el('p','sub','Samuel'));
+
+  const rows = el('div','');
+  rows.appendChild(el('div','dashrow', `🏆 Melhor nota <span class="dashbig">${perf.best}/10</span>`));
+  rows.appendChild(el('div','dashrow', `📚 Desafios feitos <span class="dashbig">${perf.quizzes}</span>`));
+  rows.appendChild(el('div','dashrow', `✅ Acertos <span class="dashbig">${perf.correct}</span>`));
+  rows.appendChild(el('div','dashrow', `❌ Erros <span class="dashbig">${perf.wrong}</span>`));
+  panel.appendChild(rows);
+
+  panel.appendChild(el('div','grouptitle','Desempenho por tema'));
+  ['nutri','hib','ciclo','teia'].forEach(theme=>{
+    const t = perf.theme[theme];
+    const pct = t.t ? Math.round((t.c/t.t)*100) : 0;
+    const row = el('div','dashrow');
+    const bar = el('div','themebar');
+    const fill = el('span'); fill.style.width = pct+'%';
+    bar.appendChild(fill);
+    row.innerHTML = `<span>${THEME_LABEL_SCI[theme]}</span>`;
+    row.appendChild(bar);
+    row.appendChild(el('span','', pct+'%'));
+    panel.appendChild(row);
+  });
+
+  if(perf.wrongIds.length){
+    panel.appendChild(el('p','sub', `Você tem ${perf.wrongIds.length} questão(ões) pra revisar no botão "Treinar meus Erros" 🔄`));
+  } else if(perf.quizzes>0){
+    panel.appendChild(el('p','sub', '🌟 Nenhum erro pendente agora — mandou bem!'));
+  } else {
+    panel.appendChild(el('p','sub', 'Ainda não fez nenhum desafio. Bora começar? 🚀'));
+  }
+}
 </script>
 </body>
 </html>
