@@ -205,6 +205,15 @@
   .ptmenubtn.b{background:linear-gradient(135deg,#3FA7E1,#2f7fb0);}
   .ptmenubtn.c{background:linear-gradient(135deg,#8E6FD1,#6d51ab);}
   .ptmenubtn.d{background:linear-gradient(135deg,#FF7FAE,#d95c8a);}
+  .ptmenubtn.e{background:linear-gradient(135deg,#C98A4B,#7A5230);}
+  .ptmenubtn.f{background:linear-gradient(135deg,#E0574C,#8E2F27);}
+
+  .qapair{
+    background:#F8F5EA;border-radius:14px;padding:13px 15px;margin-bottom:10px;
+    border-left:5px solid var(--teal);
+  }
+  .qapair .q{font-weight:800;font-family:'Baloo 2';font-size:14.5px;margin-bottom:6px;color:var(--plum);}
+  .qapair .a{font-size:13.5px;font-weight:600;color:#45507a;line-height:1.45;}
 
   /* ---------- Dashboard ---------- */
   .dashrow{
@@ -1188,6 +1197,8 @@ function sciRender(){
   if(sciState.screen==='study') return sciRenderStudy(panel);
   if(sciState.screen==='quiz') return sciRenderQuiz(panel);
   if(sciState.screen==='dash') return sciRenderDash(panel);
+  if(sciState.screen==='answers') return sciRenderAnswers(panel);
+  if(sciState.screen==='actquiz') return sciRenderActQuiz(panel);
 }
 
 function sciBackBtn(panel){
@@ -1220,7 +1231,15 @@ function sciRenderHome(panel){
   b4.innerHTML = `<span class="em">🔄</span><span>Treinar meus Erros<br><small style="font-weight:600;opacity:.85;">${perf.wrongIds.length} questões pra revisar</small></span>`;
   b4.onclick = ()=>{ sciState.isErrorMode=true; sciState.session = sciBuildErrorSession(); sciState.idx=0; sciState.score=0; sciState.log=[]; sciState.hintOpen=false; sciState.screen='quiz'; sciRender(); };
 
-  menu.appendChild(b1); menu.appendChild(b2); menu.appendChild(b3); menu.appendChild(b4);
+  const b5 = el('button','ptmenubtn e');
+  b5.innerHTML = '<span class="em">📋</span><span>Atividade 11/08<br><small style="font-weight:600;opacity:.85;">perguntas e respostas pra revisar</small></span>';
+  b5.onclick = ()=>{ sciState.screen='answers'; sciRender(); };
+
+  const b6 = el('button','ptmenubtn f');
+  b6.innerHTML = '<span class="em">🎯</span><span>Desafio da Atividade<br><small style="font-weight:600;opacity:.85;">10 perguntas sorteadas das 60 complementares</small></span>';
+  b6.onclick = ()=>{ sciState.session = sciBuildActivityQuizSession(); sciState.idx=0; sciState.score=0; sciState.hintOpen=false; sciState.screen='actquiz'; sciRender(); };
+
+  menu.appendChild(b1); menu.appendChild(b2); menu.appendChild(b3); menu.appendChild(b4); menu.appendChild(b5); menu.appendChild(b6);
   panel.appendChild(menu);
 }
 
@@ -1425,6 +1444,264 @@ function sciRenderDash(panel){
   } else {
     panel.appendChild(el('p','sub', 'Ainda não fez nenhum desafio. Bora começar? 🚀'));
   }
+}
+
+/* =========================================================
+   GABARITO — Atividade de Ciências 11/08
+   "Estações do Conhecimento: Desafio entre Equipes"
+   ========================================================= */
+const SCI_QA_GROUPS = [
+  { title:'🥤 Estação: Comer e beber para quê?', items:[
+    {q:'Qual a importância da água para o corpo humano?', a:'A água é necessária para quase tudo que acontece no corpo: os movimentos, o crescimento do cabelo e das unhas, a cicatrização de machucados, a formação da urina, entre outros.'},
+    {q:'O que pode acontecer com uma pessoa que não bebe água adequadamente?', a:'Ela pode ficar desidratada: olhos fundos, muita sede, boca seca (pouca saliva) e choro sem lágrimas. Em casos graves, precisa de atendimento médico e soro.'},
+    {q:'Cite duas funções da água em nosso organismo.', a:'Ajuda a formar a urina e ajuda a regular a temperatura do corpo. (Também vale: repõe o líquido perdido pelo suor, participa da digestão.)'},
+    {q:'O que os alimentos fornecem para o nosso corpo?', a:'Energia e nutrientes (proteínas, lipídios, carboidratos, vitaminas e sais minerais) que o corpo precisa para funcionar, crescer e se manter saudável.'},
+    {q:'Qual a diferença entre torpor e hibernação?', a:'Na hibernação, o animal reduz muito as atividades e fica dias ou meses sem se mover. No torpor, ele também diminui a atividade, mas ainda se levanta algumas vezes.'},
+    {q:'Por que os seres humanos precisam se alimentar diariamente?', a:'Porque o corpo gasta energia o tempo todo, mesmo dormindo, e precisa repor nutrientes constantemente para funcionar bem.'},
+    {q:'Qual nutriente é responsável principalmente por fornecer energia ao corpo?', a:'Os carboidratos são os principais responsáveis por fornecer energia rápida ao corpo (os lipídios também fornecem bastante energia, de forma mais concentrada).'},
+    {q:'Cite dois alimentos ricos em vitaminas e minerais.', a:'Exemplos: frutas (como laranja e banana) e verduras/legumes (como cenoura e brócolis). Vale qualquer par de frutas, verduras ou legumes.'},
+    {q:'O que pode acontecer com uma pessoa que se alimenta apenas de alimentos ultraprocessados?', a:'Ela pode não receber todos os nutrientes de que o corpo precisa, ficando com falta de vitaminas, minerais e outros nutrientes — o que pode causar problemas de saúde ao longo do tempo.'},
+    {q:'Explique por que uma alimentação variada é importante para a saúde.', a:'Porque cada tipo de alimento fornece nutrientes diferentes; comendo variado, o corpo recebe tudo que precisa (proteínas, vitaminas, minerais, carboidratos etc.).'},
+    {q:'Por que alguns animais precisam armazenar energia antes do inverno?', a:'Porque no inverno há pouco alimento disponível; eles armazenam energia (geralmente em forma de gordura) para usar durante a hibernação ou o torpor.'},
+    {q:'Qual é a principal função das proteínas no nosso organismo?', a:'Ajudar a formar e reparar os tecidos do corpo (músculos, pele etc.) — são como os "tijolos" que constroem e consertam o corpo.'}
+  ]},
+  { title:'🦁 Estação: Relações Alimentares', items:[
+    {q:'O que é um predador?', a:'É o animal que caça e come outro ser vivo (a presa) para se alimentar.'},
+    {q:'O que é uma presa?', a:'É o ser vivo que é caçado e serve de alimento para o predador.'},
+    {q:'O que é um parasita?', a:'É um ser vivo que vive dentro ou sobre outro ser vivo (o hospedeiro), retirando dele alimento ou abrigo, geralmente causando algum prejuízo.'},
+    {q:'O que é um hospedeiro?', a:'É o ser vivo que abriga o parasita, fornecendo a ele alimento ou moradia.'},
+    {q:'Dê um exemplo de uma relação entre parasita e hospedeiro.', a:'A pulga (parasita) que vive no pelo do cachorro (hospedeiro), alimentando-se do sangue dele. Outro exemplo: o carrapato e o boi.'},
+    {q:'O que é um ciclo?', a:'É algo que se repete, formando uma espécie de círculo — como o ciclo da água ou o ciclo de vida de um animal, que sempre volta ao ponto de partida.'},
+    {q:'Crie uma relação alimentar onde exista um predador e uma presa.', a:'Exemplo: a coruja (predador) caça o rato (presa) para se alimentar.'},
+    {q:'Explique como as plantas conseguem produzir seu próprio alimento.', a:'As plantas fazem fotossíntese: usam a luz do Sol, água e gás carbônico para produzir seu próprio alimento, com a ajuda da clorofila.'},
+    {q:'Descreva a importância da cadeia alimentar para a natureza.', a:'Ela mostra como a energia e os nutrientes passam de um ser vivo para outro, garantindo alimento para todos e mantendo o equilíbrio do ambiente.'},
+    {q:'Justifique o motivo de o Sol ser considerado uma fonte primária de energia.', a:'Porque quase toda a energia usada pelos seres vivos vem, direta ou indiretamente, da luz do Sol — os produtores captam essa energia pela fotossíntese e a repassam pela cadeia alimentar.'},
+    {q:'Descreva a importância do Sol para os animais herbívoros.', a:'O Sol fornece energia para as plantas fazerem fotossíntese e produzirem alimento; os herbívoros comem essas plantas, obtendo assim a energia do Sol de forma indireta.'},
+    {q:'O que aconteceria se todas as plantas desaparecessem de uma cadeia alimentar?', a:'Os herbívoros ficariam sem alimento e poderiam morrer; sem eles, os carnívoros que dependem deles também ficariam sem comida — toda a cadeia seria afetada.'},
+    {q:'Por que os animais dependem das plantas para sobreviver, mesmo quando não se alimentam diretamente delas?', a:'Porque mesmo os carnívoros comem animais que, em algum ponto da cadeia, se alimentaram de plantas — no fim, toda a energia vem dos produtores.'},
+    {q:'Explique a diferença entre produtor e consumidor.', a:'O produtor (planta) produz seu próprio alimento pela fotossíntese. O consumidor não produz o próprio alimento; precisa se alimentar de outros seres vivos para obter energia.'},
+    {q:'O que aconteceria com os consumidores se não existissem produtores?', a:'Não haveria alimento para os consumidores primários (herbívoros); sem eles, os demais consumidores também ficariam sem alimento — a cadeia entraria em colapso.'},
+    {q:'Por que a energia diminui à medida que passa de um ser vivo para outro na cadeia alimentar?', a:'Porque em cada etapa, parte da energia é usada pelo próprio ser vivo (respirar, se mover) e se perde em forma de calor, então cada nível recebe menos energia que o anterior.'}
+  ]},
+  { title:'🔄 Estação: Ciclos e Fluxos', items:[
+    {q:'O que são ciclos na natureza?', a:'São processos que se repetem continuamente, sempre voltando ao ponto de partida — como o ciclo da água ou o ciclo da matéria.'},
+    {q:'O que significa circulação de materiais nos ambientes?', a:'Significa que a matéria passa de um ser vivo para outro e, depois da morte e decomposição, volta para o ambiente, podendo ser usada novamente.'},
+    {q:'O que é uma cadeia alimentar?', a:'É a sequência de seres vivos que se alimentam uns dos outros, transferindo energia e matéria de um para o outro.'},
+    {q:'Quem são os produtores? Dê um exemplo.', a:'São os seres vivos capazes de produzir seu próprio alimento pela fotossíntese. Exemplo: capim, árvores, algas.'},
+    {q:'Quem são os consumidores?', a:'São os seres vivos que se alimentam de outros seres vivos para obter energia, pois não conseguem produzir seu próprio alimento.'},
+    {q:'Qual é a função dos decompositores?', a:'Decompor a matéria de seres vivos mortos, transformando-a em nutrientes que voltam para o solo e podem ser usados de novo pelas plantas.'},
+    {q:'O que é uma teia alimentar?', a:'É a união de várias cadeias alimentares que se misturam, formando uma rede mais complexa de relações entre os seres vivos.'},
+    {q:'Por que uma teia alimentar é mais complexa do que uma cadeia alimentar?', a:'Porque na teia vários seres vivos se alimentam de mais de uma fonte, formando várias conexões, enquanto a cadeia mostra apenas uma sequência única.'},
+    {q:'Explique por que um mesmo ser vivo pode fazer parte de várias cadeias alimentares.', a:'Porque ele pode servir de alimento para diferentes predadores, ou se alimentar de mais de um tipo de presa, participando de mais de uma cadeia ao mesmo tempo.'},
+    {q:'O que significa fluxo de energia?', a:'Significa que a energia passa de um ser vivo para outro em um único sentido, sem retornar à fonte original (o Sol).'},
+    {q:'A energia pode voltar ao Sol depois de passar pelos seres vivos? Explique.', a:'Não. A energia é usada pelos seres vivos em suas atividades e vai se perdendo em forma de calor ao longo da cadeia — ela nunca retorna ao Sol.'},
+    {q:'Os nutrientes presentes no solo podem voltar a ser utilizados pelas plantas? Como?', a:'Sim. Quando os seres vivos morrem, os decompositores quebram a matéria de seus corpos, liberando nutrientes no solo, que as plantas absorvem pelas raízes.'},
+    {q:'Qual é a diferença entre fluxo de energia e circulação de materiais?', a:'A energia se move em fluxo — passa em um único sentido e não retorna à fonte. A matéria circula em ciclo — pode voltar a ser usada depois da decomposição.'},
+    {q:'Explique por que os decompositores são importantes para o solo.', a:'Porque eles quebram a matéria orgânica morta, devolvendo nutrientes ao solo, o que mantém a terra fértil e permite que novas plantas cresçam.'},
+    {q:'O que aconteceria se não existissem decompositores?', a:'A matéria dos seres vivos mortos não seria decomposta, os nutrientes não voltariam ao solo, e o ciclo da matéria seria interrompido — o solo ficaria pobre em nutrientes.'},
+    {q:'Em uma cadeia alimentar, quem sempre ocupa o primeiro nível?', a:'O produtor (geralmente uma planta), pois é ele quem inicia a cadeia produzindo seu próprio alimento.'},
+    {q:'Qual é a função dos consumidores primários?', a:'Se alimentar diretamente dos produtores (plantas), sendo o segundo elo da cadeia alimentar.'},
+    {q:'Quem se alimenta dos consumidores primários?', a:'Os consumidores secundários — os que caçam ou comem os herbívoros.'},
+    {q:'Os fungos são produtores, consumidores ou decompositores? Explique.', a:'Geralmente são decompositores: se alimentam de matéria orgânica morta ou em decomposição, devolvendo nutrientes ao ambiente.'},
+    {q:'Por que uma cadeia alimentar nunca começa por um animal?', a:'Porque os animais não conseguem produzir seu próprio alimento; a cadeia sempre começa por um produtor (planta), capaz de fazer fotossíntese.'},
+    {q:'Todos os seres vivos fazem parte de alguma cadeia alimentar? Justifique.', a:'Sim, porque todo ser vivo precisa de energia para viver, e essa energia vem de relações alimentares — produzindo, se alimentando ou decompondo matéria.'},
+    {q:'Como a morte de um animal contribui para a continuidade dos ciclos da natureza?', a:'Os decompositores quebram seu corpo, devolvendo os nutrientes ao ambiente, que poderão ser usados por outros seres vivos, mantendo o ciclo da matéria.'},
+    {q:'O que acontece com os nutrientes de uma planta depois que ela morre?', a:'Os decompositores quebram a matéria da planta morta, liberando os nutrientes de volta ao solo, onde podem ser absorvidos por outras plantas.'},
+    {q:'Por que dizemos que a matéria circula na natureza, mas a energia flui?', a:'Porque a matéria pode ser reaproveitada (os decompositores a devolvem ao ambiente, formando um ciclo), enquanto a energia é usada e perdida em calor a cada etapa, seguindo em um único sentido, sem voltar à fonte.'}
+  ]},
+  { title:'🚀 Perguntas desafiadoras', items:[
+    {q:'Se todas as plantas de um ambiente desaparecessem, explique o que poderia acontecer com os demais seres vivos da cadeia alimentar.', a:'Os herbívoros ficariam sem alimento e poderiam morrer de fome; com menos herbívoros, os carnívoros que dependem deles também teriam menos comida — toda a cadeia seria prejudicada.'},
+    {q:'Justifique por que um leão não consegue produzir seu próprio alimento.', a:'Porque o leão é um consumidor (animal); só os produtores, como as plantas, conseguem produzir seu próprio alimento a partir da luz do Sol. O leão precisa caçar outros animais para obter energia.'},
+    {q:'Um coelho alimenta-se de capim e é capturado por uma raposa. Identifique quem é o produtor, o consumidor primário e o consumidor secundário.', a:'Produtor: capim. Consumidor primário: coelho. Consumidor secundário: raposa.'},
+    {q:'Justifique por que uma pessoa pode sentir mais cansaço em um dia muito quente se beber pouca água.', a:'Em dias quentes o corpo perde mais água pelo suor; se essa água não é reposta, a pessoa pode ficar desidratada, o que causa cansaço, fraqueza e queda no desempenho do corpo.'},
+    {q:'Um menino passou o dia comendo apenas doces e refrigerante. Explique por que essa alimentação não fornece tudo o que o corpo precisa.', a:'Doces e refrigerantes fornecem principalmente açúcar (energia rápida), mas não têm proteínas, vitaminas e sais minerais suficientes, que o corpo precisa para crescer, se reparar e funcionar bem.'},
+    {q:'Uma pessoa pratica esportes todos os dias. Analise por que ela precisa consumir alimentos variados, e não apenas um único tipo de alimento.', a:'Cada tipo de alimento fornece nutrientes diferentes (energia, proteínas para os músculos, vitaminas, minerais); uma alimentação variada garante que o corpo tenha tudo para ter energia e se recuperar bem dos exercícios.'},
+    {q:'Explique por que a matéria pode circular na natureza, mas a energia não.', a:'A matéria pode ser reaproveitada: quando os seres vivos morrem, os decompositores devolvem os nutrientes ao ambiente. Já a energia vai sendo usada e perdida em forma de calor em cada etapa, sem nunca retornar à sua fonte original, o Sol.'},
+    {q:'Após uma tempestade, muitas folhas caíram no chão e, depois de algumas semanas, quase desapareceram. Explique o que aconteceu com essas folhas e qual ser vivo participou desse processo.', a:'As folhas foram decompostas por decompositores (fungos e bactérias), que quebraram a matéria orgânica, devolvendo os nutrientes para o solo — por isso foram "desaparecendo" aos poucos.'}
+  ]}
+];
+
+function sciRenderAnswers(panel){
+  sciBackBtn(panel);
+  panel.appendChild(el('h2','','📋 Gabarito — Atividade 11/08'));
+  panel.appendChild(el('p','sub','Estações do Conhecimento: Desafio entre Equipes — leia e revise cada resposta'));
+  SCI_QA_GROUPS.forEach(group=>{
+    panel.appendChild(el('div','grouptitle', group.title));
+    group.items.forEach(item=>{
+      const box = el('div','qapair');
+      box.appendChild(el('div','q', '❓ '+item.q));
+      box.appendChild(el('div','a', '✅ '+item.a));
+      panel.appendChild(box);
+    });
+  });
+  const startBtn = el('button','nextbtn','🎮 Ir para o Desafio');
+  startBtn.style.marginTop = '18px';
+  startBtn.onclick = ()=>{ sciState.isErrorMode=false; sciState.session = sciBuildQuizSession(); sciState.idx=0; sciState.score=0; sciState.log=[]; sciState.hintOpen=false; sciState.screen='quiz'; sciRender(); };
+  panel.appendChild(startBtn);
+}
+
+/* =========================================================
+   DESAFIO DA ATIVIDADE — 10 perguntas sorteadas das 60
+   perguntas complementares (convertidas em múltipla escolha)
+   ========================================================= */
+const SCI_ACTIVITY_BANK = [
+  {id:1, q:'Qual a importância da água para o corpo humano?', opts:['É essencial para quase todas as atividades do corpo (movimento, cicatrização, formação da urina etc.)','Serve apenas para matar a sede','Não tem função importante no corpo','Serve só para digerir doces'], a:0},
+  {id:2, q:'O que pode acontecer com quem não bebe água adequadamente?', opts:['Pode ficar desidratado','Fica mais forte','Cresce mais rápido','Nada acontece'], a:0},
+  {id:3, q:'Cite uma função da água no organismo.', opts:['Ajuda a formar a urina','Produz vitamina C sozinha','Fabrica proteínas sozinha','Substitui o sono'], a:0},
+  {id:4, q:'O que os alimentos fornecem para o corpo?', opts:['Energia e nutrientes','Somente água','Somente sabor','Somente cor'], a:0},
+  {id:5, q:'Qual a diferença entre torpor e hibernação?', opts:['Na hibernação o animal fica muito tempo parado; no torpor ele ainda se levanta às vezes','São exatamente a mesma coisa','Torpor é mais longo que hibernação','Hibernação só acontece em répteis'], a:0},
+  {id:6, q:'Por que precisamos nos alimentar diariamente?', opts:['Porque o corpo gasta energia o tempo todo e precisa repor nutrientes','Só por hábito cultural','Porque senão ficamos mais altos','Não é realmente necessário'], a:0},
+  {id:7, q:'Qual nutriente fornece energia principalmente ao corpo?', opts:['Carboidratos','Água','Sais minerais','Vitaminas'], a:0},
+  {id:8, q:'Cite um alimento rico em vitaminas e minerais.', opts:['Frutas e verduras (ex: laranja, cenoura)','Refrigerante','Salgadinho industrializado','Doce de embalagem'], a:0},
+  {id:9, q:'O que acontece com quem come só ultraprocessados?', opts:['Pode faltar nutrientes importantes ao corpo','Fica com mais vitaminas','Cresce mais rápido','Fica imune a doenças'], a:0},
+  {id:10, q:'Por que uma alimentação variada é importante?', opts:['Porque cada alimento fornece nutrientes diferentes','Porque enjoa comer sempre igual','Não tem importância real','Só serve pra emagrecer'], a:0},
+  {id:11, q:'Por que alguns animais armazenam energia antes do inverno?', opts:['Porque no inverno há pouco alimento disponível','Porque fica mais frio no verão','Para crescer mais rápido','Para fugir de predadores'], a:0},
+  {id:12, q:'Qual a principal função das proteínas?', opts:['Formar e reparar os tecidos do corpo','Dar sabor doce aos alimentos','Substituir a água no corpo','Produzir luz solar'], a:0},
+  {id:13, q:'O que é um predador?', opts:['Animal que caça outro para se alimentar','Animal que só come plantas','Ser vivo que vive dentro de outro','Planta que produz alimento'], a:0},
+  {id:14, q:'O que é uma presa?', opts:['Ser vivo caçado e servido de alimento a um predador','Animal que caça outros','Planta produtora','Fungo decompositor'], a:0},
+  {id:15, q:'O que é um parasita?', opts:['Vive dentro/sobre outro ser vivo tirando alimento ou abrigo dele','Animal que caça presas grandes','Planta que faz fotossíntese','Ser vivo que produz seu próprio alimento'], a:0},
+  {id:16, q:'O que é um hospedeiro?', opts:['Ser vivo que abriga o parasita','Animal que caça o parasita','Planta decompositora','Predador de topo da cadeia'], a:0},
+  {id:17, q:'Dê um exemplo de parasita e hospedeiro.', opts:['Pulga (parasita) e cachorro (hospedeiro)','Leão e zebra','Capim e vaca','Sol e planta'], a:0},
+  {id:18, q:'O que é um ciclo?', opts:['Algo que se repete, voltando ao ponto de partida','Algo que só acontece uma vez','Um tipo de decompositor','Um nutriente do corpo'], a:0},
+  {id:19, q:'Dê um exemplo de predador e presa.', opts:['Coruja (predador) e rato (presa)','Capim e Sol','Fungo e árvore morta','Água e planta'], a:0},
+  {id:20, q:'Como as plantas produzem seu próprio alimento?', opts:['Por meio da fotossíntese, usando luz solar, água e gás carbônico','Comendo outros seres vivos','Absorvendo apenas terra','Elas não produzem, recebem pronto'], a:0},
+  {id:21, q:'Qual a importância da cadeia alimentar para a natureza?', opts:['Garante a transferência de energia e nutrientes entre os seres vivos','Serve só de curiosidade científica','Não tem função real','Serve apenas para nomear animais'], a:0},
+  {id:22, q:'Por que o Sol é considerado fonte primária de energia?', opts:['Porque quase toda energia dos seres vivos vem dele, direta ou indiretamente','Porque ele é feito de água','Porque as plantas o produzem','Porque ele nunca esquenta a Terra'], a:0},
+  {id:23, q:'Qual a importância do Sol para os animais herbívoros?', opts:['O Sol energiza as plantas, que os herbívoros comem','Os herbívoros absorvem luz solar diretamente','O Sol não afeta herbívoros','Os herbívoros produzem luz própria'], a:0},
+  {id:24, q:'O que ocorreria se as plantas desaparecessem de uma cadeia alimentar?', opts:['Herbívoros ficariam sem alimento, afetando toda a cadeia','Nada mudaria','Os carnívoros passariam a comer mais plantas','Os decompositores virariam produtores'], a:0},
+  {id:25, q:'Por que os animais dependem das plantas mesmo sem comê-las direto?', opts:['Porque a energia vem, no fim, dos produtores','Não dependem de forma alguma','Porque as plantas produzem oxigênio apenas','Porque as plantas são decompositoras'], a:0},
+  {id:26, q:'Qual a diferença entre produtor e consumidor?', opts:['Produtor produz seu alimento; consumidor precisa se alimentar de outros seres','São a mesma coisa','Consumidor produz alimento; produtor não','Produtor é sempre um animal'], a:0},
+  {id:27, q:'O que ocorreria com os consumidores se não existissem produtores?', opts:['Os consumidores ficariam sem alimento','Nada mudaria','Os consumidores virariam produtores','A energia aumentaria'], a:0},
+  {id:28, q:'Por que a energia diminui ao passar de um ser vivo a outro?', opts:['Parte da energia é usada e perdida em forma de calor em cada etapa','A energia se multiplica a cada etapa','A energia nunca muda','Os seres vivos armazenam toda a energia'], a:0},
+  {id:29, q:'O que são ciclos na natureza?', opts:['Processos que se repetem, sempre voltando ao ponto de partida','Eventos que só acontecem uma vez','Sinônimo de fotossíntese','Um tipo de animal'], a:0},
+  {id:30, q:'O que significa circulação de materiais nos ambientes?', opts:['Matéria passa de um ser vivo a outro e volta ao ambiente pela decomposição','Água evaporando para o espaço','Energia voltando ao Sol','Um tipo de doença'], a:0},
+  {id:31, q:'O que é uma cadeia alimentar?', opts:['Sequência de seres vivos que se alimentam uns dos outros','Lista de animais de um zoológico','Conjunto de plantas de um jardim','Tipo de corrente metálica'], a:0},
+  {id:32, q:'Quem são os produtores? Dê um exemplo.', opts:['Seres que produzem o próprio alimento, como o capim','Animais que caçam outros seres','Fungos decompositores','Seres que só comem carne'], a:0},
+  {id:33, q:'Quem são os consumidores?', opts:['Seres que se alimentam de outros seres vivos','Seres que fazem fotossíntese','Seres que decompõem matéria morta','Seres que só vivem na água'], a:0},
+  {id:34, q:'Qual é a função dos decompositores?', opts:['Decompor matéria morta e devolver nutrientes ao solo','Produzir alimento por fotossíntese','Caçar presas grandes','Fornecer luz solar'], a:0},
+  {id:35, q:'O que é uma teia alimentar?', opts:['União de várias cadeias alimentares misturadas','Uma cadeia alimentar isolada','Um tipo de fungo','Um ciclo de vida único'], a:0},
+  {id:36, q:'Por que uma teia alimentar é mais complexa que uma cadeia?', opts:['Porque vários seres se alimentam de mais de uma fonte, formando várias conexões','Porque tem menos seres vivos','Porque não envolve energia','Porque é sempre mais curta'], a:0},
+  {id:37, q:'Por que um mesmo ser vivo pode fazer parte de várias cadeias alimentares?', opts:['Porque pode servir de alimento a vários predadores ou comer mais de uma presa','Porque ele se clona','Porque só existe uma cadeia por ambiente','Porque ele produz seu próprio alimento sempre'], a:0},
+  {id:38, q:'O que significa fluxo de energia?', opts:['Energia passando em um único sentido, sem voltar à fonte','Energia circulando em ciclo, voltando ao Sol','Energia que nunca é usada','Sinônimo de fotossíntese'], a:0},
+  {id:39, q:'A energia pode voltar ao Sol depois de passar pelos seres vivos?', opts:['Não, ela se perde em forma de calor ao longo do caminho','Sim, sempre retorna ao Sol','Só à noite','Só em cadeias muito curtas'], a:0},
+  {id:40, q:'Os nutrientes do solo podem voltar a ser usados pelas plantas?', opts:['Sim, por meio da decomposição da matéria orgânica','Não, eles se perdem para sempre','Só se forem regados com água do mar','Só uma vez na vida da planta'], a:0},
+  {id:41, q:'Qual a diferença entre fluxo de energia e circulação de materiais?', opts:['Energia flui em um sentido só; matéria circula em ciclo','São a mesma coisa','Matéria flui; energia circula','Nenhuma das duas se move'], a:0},
+  {id:42, q:'Por que os decompositores são importantes para o solo?', opts:['Devolvem nutrientes ao solo, mantendo-o fértil','Eles empobrecem o solo','Eles produzem luz para as plantas','Eles não têm função no solo'], a:0},
+  {id:43, q:'O que aconteceria se não existissem decompositores?', opts:['A matéria morta não seria decomposta e o solo perderia nutrientes','Nada mudaria','As plantas cresceriam mais rápido','Os animais parariam de precisar de energia'], a:0},
+  {id:44, q:'Em uma cadeia alimentar, quem sempre ocupa o primeiro nível?', opts:['O produtor (geralmente uma planta)','O consumidor secundário','O decompositor','Um animal carnívoro'], a:0},
+  {id:45, q:'Qual é a função dos consumidores primários?', opts:['Alimentar-se diretamente dos produtores','Decompor matéria morta','Produzir seu próprio alimento','Alimentar-se só de outros carnívoros'], a:0},
+  {id:46, q:'Quem se alimenta dos consumidores primários?', opts:['Os consumidores secundários','Os produtores','O Sol','Os decompositores apenas'], a:0},
+  {id:47, q:'Os fungos são produtores, consumidores ou decompositores?', opts:['Geralmente decompositores','Sempre produtores','Sempre consumidores primários','Nenhum dos três'], a:0},
+  {id:48, q:'Por que uma cadeia alimentar nunca começa por um animal?', opts:['Porque animais não produzem seu próprio alimento','Porque animais são sempre venenosos','Porque animais vivem menos que plantas','É só uma regra sem explicação'], a:0},
+  {id:49, q:'Todos os seres vivos fazem parte de alguma cadeia alimentar?', opts:['Sim, porque todos precisam de energia para viver','Não, só os animais','Não, só as plantas','Só os decompositores participam'], a:0},
+  {id:50, q:'Como a morte de um animal ajuda os ciclos da natureza?', opts:['Os decompositores devolvem seus nutrientes ao ambiente','A morte interrompe todos os ciclos','Não tem nenhuma relação','Ela aumenta a energia do Sol'], a:0},
+  {id:51, q:'O que ocorre com os nutrientes de uma planta após sua morte?', opts:['São liberados no solo pelos decompositores','Desaparecem para sempre','Vão direto para o Sol','Viram água instantaneamente'], a:0},
+  {id:52, q:'Por que a matéria circula, mas a energia flui?', opts:['A matéria pode ser reaproveitada; a energia se perde em calor a cada etapa','Porque a matéria é mais pesada que a energia','Ambas circulam do mesmo jeito','Nenhuma das duas se move de fato'], a:0},
+  {id:53, q:'Se as plantas desaparecessem, o que ocorreria com a cadeia alimentar?', opts:['Herbívoros e depois carnívoros ficariam sem alimento','Nada mudaria','Os animais virariam produtores','A energia aumentaria'], a:0},
+  {id:54, q:'Por que um leão não produz seu próprio alimento?', opts:['Porque ele é consumidor, não produtor','Porque ele não gosta de plantas','Porque falta luz solar para ele','Porque leões são decompositores'], a:0},
+  {id:55, q:'Um coelho come capim e é comido por uma raposa: quem é quem?', opts:['Capim = produtor, coelho = consumidor primário, raposa = consumidor secundário','Capim = consumidor, coelho = produtor, raposa = decompositor','Todos são produtores','Raposa = produtor, capim = consumidor'], a:0},
+  {id:56, q:'Por que sentimos mais cansaço em um dia quente bebendo pouca água?', opts:['Porque ficamos desidratados mais facilmente','Porque o corpo produz mais energia','Porque bebemos água demais','Não tem relação com cansaço'], a:0},
+  {id:57, q:'Por que só doces e refrigerante não fornecem tudo que o corpo precisa?', opts:['Faltam proteínas, vitaminas e minerais importantes','Porque têm gosto ruim','Porque não têm açúcar suficiente','Porque enchem demais o estômago'], a:0},
+  {id:58, q:'Por que quem pratica esportes precisa de alimentos variados?', opts:['Porque cada alimento fornece nutrientes diferentes para energia e recuperação','Porque um único alimento nunca sacia a fome','Não precisa, só precisa de água','Só precisa de doces antes do treino'], a:0},
+  {id:59, q:'Por que a matéria circula, mas a energia não retorna à fonte?', opts:['A matéria é reaproveitada pela decomposição; a energia se perde em calor','Matéria e energia funcionam do mesmo jeito','A energia é reaproveitada; a matéria não','Nenhuma das duas se transforma'], a:0},
+  {id:60, q:'Folhas caídas quase desapareceram após semanas: o que aconteceu?', opts:['Foram decompostas por fungos e bactérias (decompositores)','Voaram para o Sol','Viraram água instantaneamente','Nada aconteceu, elas ainda estão lá'], a:0}
+];
+
+function sciBuildActivityQuizSession(){
+  const picks = shuffleArray(SCI_ACTIVITY_BANK).slice(0,10);
+  return picks.map(item=>{
+    const order = shuffleArray(item.opts.map((o,i)=>i));
+    const newOpts = order.map(i=>item.opts[i]);
+    const newAnswer = order.indexOf(item.a);
+    return { q:item.q, opts:newOpts, a:newAnswer, hint:'Reveja essa no 📋 Gabarito — Atividade 11/08!' };
+  });
+}
+
+function sciFinishActQuiz(panel){
+  const total = sciState.session.length;
+  const score = sciState.score;
+  let medal, msg;
+  if(score===10){ medal='🏆'; msg='PERFEITO! Você dominou a atividade toda!'; }
+  else if(score>=8){ medal='🥇'; msg='Muito bem! Você está aprendendo muito!'; }
+  else if(score>=6){ medal='🥉'; msg='Muito bom! Vamos treinar mais um pouquinho?'; }
+  else if(score>=4){ medal='💪'; msg='Você está no caminho certo! Mais uma tentativa!'; }
+  else { medal='🚀'; msg='Não desista! Dá uma olhada no Gabarito e tenta de novo!'; }
+
+  const box = el('div','donebox');
+  box.innerHTML = `<div class="big">${medal}</div><h3>Sua nota: ${score}/10</h3><p class="msg">${msg}</p>`;
+  const retry = el('button','retrybtn','🔄 Sortear outras 10 perguntas');
+  retry.onclick = ()=>{ sciState.session = sciBuildActivityQuizSession(); sciState.idx=0; sciState.score=0; sciState.hintOpen=false; sciRender(); };
+  const home = el('button','backbtn','⬅ Menu');
+  home.style.marginTop='10px';
+  home.onclick = ()=>{ sciState.screen='home'; sciRender(); };
+  box.appendChild(retry);
+  box.appendChild(document.createElement('br'));
+  box.appendChild(home);
+  panel.appendChild(box);
+  if(score>=8) burst(medal);
+}
+
+function sciRenderActQuiz(panel){
+  if(!sciState.session.length){ sciState.session = sciBuildActivityQuizSession(); }
+  const session = sciState.session;
+
+  if(sciState.idx >= session.length){ return sciFinishActQuiz(panel); }
+
+  const item = session[sciState.idx];
+  const qhead = el('div','qhead');
+  qhead.innerHTML = `<span class="qcount">🎯 Pergunta ${sciState.idx+1} de ${session.length}</span><span class="qcount">✅ ${sciState.score}</span>`;
+  panel.appendChild(qhead);
+
+  const pbar = el('div','progressbar');
+  const pfill = el('span'); pfill.style.width = Math.round((sciState.idx/session.length)*100)+'%';
+  pbar.appendChild(pfill);
+  panel.appendChild(pbar);
+
+  panel.appendChild(el('div','qtext', item.q));
+
+  const toolbar = el('div','toolbar');
+  const hintBtn = el('button','toolbtn','💡 Preciso de uma dica');
+  const skipBtn = el('button','toolbtn','⏭️ Pular');
+  toolbar.appendChild(hintBtn); toolbar.appendChild(skipBtn);
+  panel.appendChild(toolbar);
+
+  if(sciState.hintOpen){
+    panel.appendChild(el('div','hintbox', '💡 ' + item.hint));
+  }
+  hintBtn.onclick = ()=>{ sciState.hintOpen = !sciState.hintOpen; sciRender(); };
+  skipBtn.onclick = ()=>{
+    const moved = session.splice(sciState.idx,1)[0];
+    session.push(moved);
+    sciState.hintOpen = false;
+    sciRender();
+  };
+
+  const fb = el('div','feedback','');
+  sciState.answered = false;
+
+  item.opts.forEach((optTxt,i)=>{
+    const btn = el('button','opt', optTxt);
+    btn.onclick = ()=>{
+      if(sciState.answered) return;
+      sciState.answered = true;
+      const allBtns = panel.querySelectorAll('.opt');
+      if(i===item.a){
+        btn.classList.add('correct');
+        fb.textContent = '🎉 Muito bem!';
+        sciState.score++;
+        burst('⭐');
+      } else {
+        btn.classList.add('wrong');
+        allBtns[item.a].classList.add('correct');
+        fb.textContent = '💡 Quase! A resposta certa é: ' + item.opts[item.a];
+      }
+      const next = el('button','nextbtn', sciState.idx+1<session.length ? 'Próxima ➜' : 'Ver resultado 🏁');
+      next.onclick = ()=>{ sciState.idx++; sciState.hintOpen=false; sciRender(); };
+      panel.appendChild(next);
+    };
+    panel.appendChild(btn);
+  });
+  panel.appendChild(fb);
 }
 </script>
 </body>
